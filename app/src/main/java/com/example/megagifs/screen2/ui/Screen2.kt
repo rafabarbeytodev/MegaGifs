@@ -116,7 +116,7 @@ fun Screen2(
             onValueChange = { screen2ViewModel.onText2Change(it) },
             label = { Text(text = "Introduce tu nombre") },
             modifier = Modifier.padding(top = 16.dp))
-        Button(onClick = { navController.navigate(Routes.Screen3.route) }) {
+        Button(onClick = { navController.navigate(Routes.PrincipalScreen.route) }) {
             Text(text = "OK")
         }
     }
