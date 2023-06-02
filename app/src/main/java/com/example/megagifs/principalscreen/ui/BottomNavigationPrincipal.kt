@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
  *****/
 
 @Composable
-fun MyBottomNavigation() {
+fun BottomNavigationPrincipal() {
 
     var index by rememberSaveable { mutableStateOf(0) }
 

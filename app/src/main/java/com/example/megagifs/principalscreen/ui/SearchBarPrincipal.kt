@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MySearchBar(onClickDrawer: () -> Unit) {
+fun SearchBarPrincipal(onClickDrawer: () -> Unit) {
 
     val context = LocalContext.current
     var query by remember { mutableStateOf("") }

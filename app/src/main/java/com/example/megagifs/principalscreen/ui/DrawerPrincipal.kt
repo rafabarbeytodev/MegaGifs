@@ -42,7 +42,7 @@ import com.example.megagifs.R
  *****/
 
 @Composable
-fun MyDrawer(onCloseDrawer: () -> Unit) {
+fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
 
     Column() {
         Box(

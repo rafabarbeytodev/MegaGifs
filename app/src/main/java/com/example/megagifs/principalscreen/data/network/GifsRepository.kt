@@ -1,8 +1,8 @@
-package com.example.megagifs.screen6.data.network
+package com.example.megagifs.principalscreen.data.network
 
 import android.util.Log
-import com.example.megagifs.screen6.data.network.response.GifsResponse
-import com.example.megagifs.screen6.data.network.response.GiphyItem
+import com.example.megagifs.principalscreen.data.network.response.GifsResponse
+import com.example.megagifs.principalscreen.data.network.response.GiphyItem
 
 /*****
  * Proyect: MegaGifs

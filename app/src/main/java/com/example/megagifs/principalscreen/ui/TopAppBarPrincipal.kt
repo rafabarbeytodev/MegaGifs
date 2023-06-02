@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
  *****/
 
 @Composable
-fun MyTopAppBar(onClickIcon: (String) -> Unit, onClickDrawer: () -> Unit) {
+fun TopAppBarPrincipal(onClickIcon: (String) -> Unit, onClickDrawer: () -> Unit) {
     TopAppBar(
         title = { Text(text = "Mi primera Tollbar") },
         backgroundColor = Color.DarkGray,

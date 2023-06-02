@@ -1,5 +1,6 @@
 package com.example.megagifs.principalscreen.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -25,10 +26,10 @@ fun PrincipalScreen(navController: NavHostController) {
 
     Scaffold(
         scaffoldState = scaffoldState,
-        bottomBar = { MyBottomNavigation() },
+        bottomBar = { BottomNavigationPrincipal() },
         drawerBackgroundColor = Color.DarkGray,
         drawerContent = {
-            MyDrawer {
+            DrawerPrincipal {
                 coroutineScope.launch {
                     scaffoldState.drawerState.close()
                 }
@@ -37,14 +38,19 @@ fun PrincipalScreen(navController: NavHostController) {
         drawerGesturesEnabled = true
     ) {
         it.calculateBottomPadding()
-        MySearchBar(onClickDrawer = {
-            coroutineScope.launch {
-                scaffoldState.drawerState.open()
-            }
-        })
-    }
+        Column {
+            SearchBarPrincipal(onClickDrawer = {
+                coroutineScope.launch {
+                    scaffoldState.drawerState.open()
+                }
+            })
 
+            LazyVerticalGridPrincipal(navController,PrincipalScreenViewModel())
+        }
+    }
 }
+
+
 
 
 

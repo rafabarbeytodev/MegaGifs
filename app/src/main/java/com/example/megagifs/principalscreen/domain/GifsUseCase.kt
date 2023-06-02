@@ -1,9 +1,9 @@
-package com.example.megagifs.screen6.domain
+package com.example.megagifs.principalscreen.domain
 
 import android.util.Log
-import com.example.megagifs.screen6.data.network.GifsRepository
-import com.example.megagifs.screen6.data.network.response.GifsResponse
-import com.example.megagifs.screen6.data.network.response.GiphyItem
+import com.example.megagifs.principalscreen.data.network.GifsRepository
+import com.example.megagifs.principalscreen.data.network.response.GifsResponse
+import com.example.megagifs.principalscreen.data.network.response.GiphyItem
 
 /*****
  * Proyect: MegaGifs
@@ -17,7 +17,6 @@ import com.example.megagifs.screen6.data.network.response.GiphyItem
 class GifsUseCase {
 
     private val repository = GifsRepository()
-
     suspend operator fun invoke(): GifsResponse? {
         return repository.getGifs()
     }

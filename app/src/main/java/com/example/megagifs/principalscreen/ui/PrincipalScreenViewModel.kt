@@ -1,5 +1,7 @@
-package com.example.megagifs.screen6.ui
+package com.example.megagifs.principalscreen.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.megagifs.principalscreen.data.network.response.GifsResponse
 import com.example.megagifs.principalscreen.domain.GifsUseCase
@@ -13,11 +15,14 @@ import com.example.megagifs.principalscreen.domain.GifsUseCase
  *
  * All rights reserved 2023.
  *****/
-class Screen6ViewModel : ViewModel() {
+class PrincipalScreenViewModel : ViewModel() {
+
+    private val _result =  MutableLiveData<GifsResponse>()
+    val result: LiveData<GifsResponse> = _result
 
     val gifsUseCase = GifsUseCase()
 
-    suspend fun onGetGifs(): GifsResponse? {
-        return gifsUseCase()
+    suspend fun onGetGifs(){
+        _result.value = gifsUseCase()
     }
 }

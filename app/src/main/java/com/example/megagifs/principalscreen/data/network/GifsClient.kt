@@ -1,6 +1,6 @@
-package com.example.megagifs.screen6.data.network
+package com.example.megagifs.principalscreen.data.network
 
-import com.example.megagifs.screen6.data.network.response.GifsResponse
+import com.example.megagifs.principalscreen.data.network.response.GifsResponse
 import retrofit2.Response
 import retrofit2.http.GET
 

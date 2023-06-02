@@ -1,4 +1,4 @@
-package com.example.megagifs.screen6.data.network.response
+package com.example.megagifs.principalscreen.data.network.response
 
 import com.google.gson.annotations.SerializedName
 
