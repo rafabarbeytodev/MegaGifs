@@ -2,7 +2,7 @@ package com.example.megagifs.screen6.ui
 
 import androidx.lifecycle.ViewModel
 import com.example.megagifs.principalscreen.data.network.response.GifsResponse
-import com.example.megagifs.principalscreen.domain.GifsUseCase
+import com.example.megagifs.principalscreen.domain.TrendingGifsUseCase
 
 /*****
  * Proyect: MegaGifs
@@ -15,9 +15,9 @@ import com.example.megagifs.principalscreen.domain.GifsUseCase
  *****/
 class Screen6ViewModel : ViewModel() {
 
-    val gifsUseCase = GifsUseCase()
+    val trendingGifsUseCase = TrendingGifsUseCase()
 
     suspend fun onGetGifs(): GifsResponse? {
-        return gifsUseCase()
+        return trendingGifsUseCase()
     }
 }

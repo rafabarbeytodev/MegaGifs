@@ -10,9 +10,11 @@ package com.example.megagifs.model
  * All rights reserved 2023.
  *****/
 sealed class Routes(val route: String) {
+    object PrincipalScreen : Routes("principalScreen?type={type}&search={search}"){
+        fun createRoute(type:Int, search:String) = "principalScreen?type=$type&search=$search"
+    }
     object Screen1 : Routes("screen1")
     object Screen2 : Routes("screen2")
-    object PrincipalScreen : Routes("principalscreen")
     object Screen4 : Routes("screen4")
     object Screen5 : Routes("screen5")
     object Screen6 : Routes("screen6")

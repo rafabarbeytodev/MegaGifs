@@ -1,8 +1,6 @@
 package com.example.megagifs.principalscreen.data.network
 
-import android.util.Log
 import com.example.megagifs.principalscreen.data.network.response.GifsResponse
-import com.example.megagifs.principalscreen.data.network.response.GiphyItem
 
 /*****
  * Proyect: MegaGifs
@@ -14,9 +12,22 @@ import com.example.megagifs.principalscreen.data.network.response.GiphyItem
  * All rights reserved 2023.
  *****/
 class GifsRepository {
-    private val api = GifsService()
 
-    suspend fun getGifs(): GifsResponse? {
-        return api.getGifs()
+    private val api = GifsService()
+    suspend fun getTrendingGifs(): GifsResponse? {
+        return api.getTrendingGifs()
     }
+    suspend fun getTrendingStickers(): GifsResponse? {
+        return api.getTrendingStickers()
+    }
+    suspend fun getTrendingEmojis(): GifsResponse? {
+        return api.getTrendingEmojis()
+    }
+    suspend fun getSearchGifs(search: String): GifsResponse? {
+        return api.getSearchGifs(search)
+    }
+    suspend fun getSearchStickers(search: String): GifsResponse? {
+        return api.getSearchStickers(search)
+    }
+
 }

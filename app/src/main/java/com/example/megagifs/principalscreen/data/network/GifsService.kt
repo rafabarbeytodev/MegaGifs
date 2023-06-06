@@ -3,10 +3,8 @@ package com.example.megagifs.principalscreen.data.network
 import android.util.Log
 import com.example.megagifs.core.network.RetrofitHelper
 import com.example.megagifs.principalscreen.data.network.response.GifsResponse
-import com.example.megagifs.principalscreen.data.network.response.GiphyItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.create
 
 /*****
  * Proyect: MegaGifs
@@ -20,10 +18,10 @@ import retrofit2.create
 class GifsService {
     private val retrofit = RetrofitHelper.getRetrofit()
 
-    suspend fun getGifs(): GifsResponse? {
+    suspend fun getTrendingGifs(): GifsResponse? {
         return withContext(Dispatchers.IO){
             try {
-                val response = retrofit.create(GifsClient::class.java).getGifs()
+                val response = retrofit.create(GifsClient::class.java).getTrendingGifs()
                 if (response.isSuccessful) {
                     Log.i("DEVELOPRAFA", "RESPUESTA OK")
                     response.body()
@@ -37,4 +35,73 @@ class GifsService {
             }
         }
     }
+    suspend fun getTrendingStickers(): GifsResponse? {
+        return withContext(Dispatchers.IO){
+            try {
+                val response = retrofit.create(GifsClient::class.java).getTrendingStickers()
+                if (response.isSuccessful) {
+                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    response.body()
+                } else {
+                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    null
+                }
+            }catch(e:Exception){
+                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                null
+            }
+        }
+    }
+    suspend fun getTrendingEmojis(): GifsResponse? {
+        return withContext(Dispatchers.IO){
+            try {
+                val response = retrofit.create(GifsClient::class.java).getTrendingEmojis()
+                if (response.isSuccessful) {
+                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    response.body()
+                } else {
+                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    null
+                }
+            }catch(e:Exception){
+                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                null
+            }
+        }
+    }
+    suspend fun getSearchGifs(search: String): GifsResponse? {
+        return withContext(Dispatchers.IO){
+            try {
+                val response = retrofit.create(GifsClient::class.java).getSearchGifs(search)
+                if (response.isSuccessful) {
+                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    response.body()
+                } else {
+                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    null
+                }
+            }catch(e:Exception){
+                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                null
+            }
+        }
+    }
+    suspend fun getSearchStickers(search: String): GifsResponse? {
+        return withContext(Dispatchers.IO){
+            try {
+                val response = retrofit.create(GifsClient::class.java).getSearchStickers(search)
+                if (response.isSuccessful) {
+                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    response.body()
+                } else {
+                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    null
+                }
+            }catch(e:Exception){
+                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                null
+            }
+        }
+    }
+
 }

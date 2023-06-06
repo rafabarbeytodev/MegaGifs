@@ -8,8 +8,11 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.megagifs.principalscreen.ui.PrincipalScreen
 import com.example.megagifs.model.Routes
+import com.example.megagifs.screen2.ui.Screen2
+import com.example.megagifs.screen2.ui.Screen2ViewModel
 import com.example.megagifs.ui.theme.MegaGifsTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,16 +32,21 @@ class MainActivity : ComponentActivity() {
                         navController = navigationController,
                         startDestination = Routes.PrincipalScreen.route
                     ) {
-                        //composable(Routes.Screen1.route) { Screen1(navigationController) }
-                        //composable(Routes.Screen2.route) {
-                            //Screen2(
-                            //    navigationController, Screen2ViewModel()
-                            //)
-                        //}
-                        composable(Routes.PrincipalScreen.route) { PrincipalScreen(navigationController) }
-                        //composable(Routes.Screen4.route) { Screen4(navigationController) }
-                        //composable(Routes.Screen5.route) { Screen5(navigationController) }
-                        //composable(Routes.Screen6.route) { Screen6(navigationController, Screen6ViewModel()) }
+                        composable(
+                            Routes.PrincipalScreen.route,
+                            arguments = listOf(navArgument("type") { defaultValue = 0 },
+                                navArgument("search") { defaultValue = "" })
+                        ) { backStackEntry ->
+                            backStackEntry.arguments?.let {
+                                it.getString("search")?.let { search ->
+                                    PrincipalScreen(
+                                        navigationController,
+                                        it.getInt("type"),
+                                        search
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

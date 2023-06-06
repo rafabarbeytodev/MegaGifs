@@ -1,6 +1,5 @@
 package com.example.megagifs.screen5.ui
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -47,7 +46,7 @@ fun Screen5(navController: NavHostController) {
 
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(getgifs()) { supergif ->
-            ItemGif(superGifs = supergif) {
+            ItemGif2(superGifs = supergif) {
                 Toast.makeText(context, it.supergiftitle, Toast.LENGTH_SHORT).show()
                 navController.navigate(Routes.Screen6.route)
             }
@@ -56,7 +55,7 @@ fun Screen5(navController: NavHostController) {
 
 }
 @Composable
-fun ItemGif(superGifs: SuperGifs, onItemSelected: (SuperGifs) -> Unit) {
+fun ItemGif2(superGifs: SuperGifs, onItemSelected: (SuperGifs) -> Unit) {
     Card(
         border = BorderStroke(2.dp, Color.Gray), modifier = Modifier
             .width(200.dp)

@@ -1,9 +1,7 @@
 package com.example.megagifs.principalscreen.domain
 
-import android.util.Log
 import com.example.megagifs.principalscreen.data.network.GifsRepository
 import com.example.megagifs.principalscreen.data.network.response.GifsResponse
-import com.example.megagifs.principalscreen.data.network.response.GiphyItem
 
 /*****
  * Proyect: MegaGifs
@@ -14,10 +12,10 @@ import com.example.megagifs.principalscreen.data.network.response.GiphyItem
  *
  * All rights reserved 2023.
  *****/
-class GifsUseCase {
+class TrendingGifsUseCase {
 
     private val repository = GifsRepository()
     suspend operator fun invoke(): GifsResponse? {
-        return repository.getGifs()
+        return repository.getTrendingGifs()
     }
 }

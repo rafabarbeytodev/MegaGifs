@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import com.example.megagifs.screen5.ui.ItemGif
+import com.example.megagifs.screen5.ui.ItemGif2
 import com.example.megagifs.screen5.ui.getgifs
 import com.example.megagifs.model.Routes
 
@@ -28,7 +28,7 @@ fun Screen6(navController: NavHostController, screen6ViewModel: Screen6ViewModel
 
     LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
         items(getgifs()) { supergif ->
-            ItemGif(superGifs = supergif) {
+            ItemGif2(superGifs = supergif) {
                 Toast.makeText(context, it.supergiftitle, Toast.LENGTH_SHORT).show()
                 navController.navigate(Routes.Screen5.route)
             }

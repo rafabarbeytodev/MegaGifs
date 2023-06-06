@@ -35,7 +35,32 @@ data class GiphyItem(
     @SerializedName("is_sticker") val is_sticker: Int,
     @SerializedName("import_datetime") val import_datetime: String,
     @SerializedName("trending_datetime") val trending_datetime: String,
-    @SerializedName("images") val images: GiphyImages
+    @SerializedName("images") val images: GiphyImages,
+    @SerializedName("analytics_response_payload") val analytics_response_payload: String,
+    @SerializedName("user") val user: GiphyUser,
+    @SerializedName("analytics") val analytics: GiphyAnalytics
+)
+
+data class GiphyAnalytics(
+    @SerializedName("onload") val onload: GiphyAnalytic,
+    @SerializedName("onclick") val onclick: GiphyAnalytic,
+    @SerializedName("onsent") val onsent: GiphyAnalytic
+)
+data class GiphyAnalytic(
+    @SerializedName("url") val url: String
+)
+
+data class GiphyUser(
+    @SerializedName("avatar_url") val avatar_url: String,
+    @SerializedName("banner_image") val banner_image: String,
+    @SerializedName("banner_url") val banner_url: String,
+    @SerializedName("profile_url") val profile_url: String,
+    @SerializedName("username") val username: String,
+    @SerializedName("display_name") val display_name: String,
+    @SerializedName("description") val description: String,
+    @SerializedName("instagram_url") val instagram_url: String,
+    @SerializedName("website_url") val website_url: String,
+    @SerializedName("is_verified") val is_verified: Boolean
 )
 
 data class GiphyImages(
@@ -54,7 +79,8 @@ data class GiphyImages(
     @SerializedName("fixed_width_downsampled") val fixed_width_downsampled: GiphyImage,
     @SerializedName("fixed_width_small") val fixed_width_small: GiphyImage,
     @SerializedName("fixed_width_small_still") val fixed_width_small_still: GiphyImage,
-    @SerializedName("fixed_width_still") val fixed_width_still: GiphyImage
+    @SerializedName("fixed_width_still") val fixed_width_still: GiphyImage,
+    @SerializedName("preview_gif") val preview_gif: GiphyImage
 )
 
 data class GiphyImage(
