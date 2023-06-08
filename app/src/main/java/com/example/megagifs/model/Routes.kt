@@ -1,5 +1,7 @@
 package com.example.megagifs.model
 
+import com.example.megagifs.screenprincipal.data.network.response.GifItem
+
 /*****
  * Proyect: MegaGifs
  * Package: com.example.megagifs.model
@@ -10,12 +12,18 @@ package com.example.megagifs.model
  * All rights reserved 2023.
  *****/
 sealed class Routes(val route: String) {
-    object PrincipalScreen : Routes("principalScreen?type={type}&search={search}"){
-        fun createRoute(type:Int, search:String) = "principalScreen?type=$type&search=$search"
+    object PrincipalScreen : Routes("principalScreen?type={type}&search={search}") {
+        fun createRoute(type: Int, search: String) = "principalScreen?type=$type&search=$search"
     }
-    object Screen1 : Routes("screen1")
-    object Screen2 : Routes("screen2")
-    object Screen4 : Routes("screen4")
-    object Screen5 : Routes("screen5")
-    object Screen6 : Routes("screen6")
+
+    object DetailsScreen :
+        Routes("detailsScreen?type={type}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}") {
+        fun createRoute(
+            type: Int, url: String, avatar: String,
+            displayName: String,
+            userName: String
+        ) =
+            "detailsScreen?type=$type&id=$url&avatar=$avatar&displayName=$displayName&userName=$userName"
+    }
+
 }
