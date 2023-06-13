@@ -13,17 +13,20 @@ import com.example.megagifs.screenprincipal.data.network.response.GifItem
  *****/
 sealed class Routes(val route: String) {
     object PrincipalScreen : Routes("principalScreen?type={type}&search={search}") {
-        fun createRoute(type: Int, search: String) = "principalScreen?type=$type&search=$search"
+        fun createRoute(type: Int, search: String = "") = "principalScreen?type=$type&search=$search"
     }
 
     object DetailsScreen :
-        Routes("detailsScreen?type={type}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}") {
+        Routes("detailsScreen?type={type}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}") {
         fun createRoute(
-            type: Int, url: String, avatar: String,
+            type: Int,
+            url: String,
+            avatar: String,
             displayName: String,
-            userName: String
+            userName: String,
+            verified:Boolean
         ) =
-            "detailsScreen?type=$type&id=$url&avatar=$avatar&displayName=$displayName&userName=$userName"
+            "detailsScreen?type=$type&url=$url&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified"
     }
 
 }

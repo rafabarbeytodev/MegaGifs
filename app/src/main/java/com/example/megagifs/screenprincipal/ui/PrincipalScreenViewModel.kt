@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.megagifs.screenprincipal.data.network.response.GifItem
-import com.example.megagifs.screenprincipal.domain.searchs.SearchGifsUseCase
-import com.example.megagifs.screenprincipal.domain.searchs.SearchStickersUseCase
-import com.example.megagifs.screenprincipal.domain.trendings.TrendingEmojisUseCase
-import com.example.megagifs.screenprincipal.domain.trendings.TrendingGifsUseCase
-import com.example.megagifs.screenprincipal.domain.trendings.TrendingStickersUseCase
+import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
+import com.example.megagifs.screenprincipal.domain.searchsUsesCase.SearchGifsUseCase
+import com.example.megagifs.screenprincipal.domain.searchsUsesCase.SearchStickersUseCase
+import com.example.megagifs.screenprincipal.domain.trendingsUsesCase.TrendingEmojisUseCase
+import com.example.megagifs.screenprincipal.domain.trendingsUsesCase.TrendingGifsUseCase
+import com.example.megagifs.screenprincipal.domain.trendingsUsesCase.TrendingStickersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -30,46 +31,46 @@ class PrincipalScreenViewModel @Inject constructor(
     private val searchingStickersUseCase: SearchStickersUseCase
 ) : ViewModel() {
 
-    private val _resultGifs = MutableLiveData<List<GifItem>>()
-    val resultGifs: LiveData<List<GifItem>> = _resultGifs
+    private val _resultGifs = MutableLiveData<GifsResponse?>()
+    val resultGifs: LiveData<GifsResponse?> = _resultGifs
 
-    private val _resultStickers = MutableLiveData<List<GifItem>>()
-    val resultStickers: LiveData<List<GifItem>> = _resultStickers
+    private val _resultStickers = MutableLiveData<GifsResponse?>()
+    val resultStickers: LiveData<GifsResponse?> = _resultStickers
 
-    private val _resultEmojis = MutableLiveData<List<GifItem>>()
-    val resultEmojis: LiveData<List<GifItem>> = _resultEmojis
+    private val _resultEmojis = MutableLiveData<GifsResponse?>()
+    val resultEmojis: LiveData<GifsResponse?> = _resultEmojis
 
-    private val _resultSearchGifs = MutableLiveData<List<GifItem>>()
-    val resultSearchGifs: LiveData<List<GifItem>> = _resultSearchGifs
+    private val _resultSearchGifs = MutableLiveData<GifsResponse?>()
+    val resultSearchGifs: LiveData<GifsResponse?> = _resultSearchGifs
 
-    private val _resultSearchStickers = MutableLiveData<List<GifItem>>()
-    val resultSearchStickers: LiveData<List<GifItem>> = _resultSearchStickers
+    private val _resultSearchStickers = MutableLiveData<GifsResponse?>()
+    val resultSearchStickers: LiveData<GifsResponse?> = _resultSearchStickers
 
     private val _showProgress = MutableLiveData<Boolean>()
     val showProgress: LiveData<Boolean> = _showProgress
 
 
     suspend fun onGetGifs() {
-        _resultGifs.value = trendingGifsUseCase()?.data.orEmpty()
+        _resultGifs.value = trendingGifsUseCase()
     }
 
     suspend fun onGetStickers() {
-        _resultStickers.value = trendingStickersUseCase()?.data.orEmpty()
+        _resultStickers.value = trendingStickersUseCase()
     }
 
     suspend fun onGetEmojis() {
-        _resultEmojis.value = trendingEmojisUseCase()?.data.orEmpty()
+        _resultEmojis.value = trendingEmojisUseCase()
     }
 
     suspend fun onGetSearchGifs(search: String) {
-        _resultSearchGifs.value = searchingGifsUseCase(search)?.data.orEmpty()
+        _resultSearchGifs.value = searchingGifsUseCase(search)
     }
 
     suspend fun onGetSearchStickers(search: String) {
-        _resultSearchStickers.value = searchingStickersUseCase(search)?.data.orEmpty()
+        _resultSearchStickers.value = searchingStickersUseCase(search)
     }
 
-    fun showProgress(state: Boolean) {
+    fun onShowProgress(state: Boolean) {
         _showProgress.value = state
     }
 }

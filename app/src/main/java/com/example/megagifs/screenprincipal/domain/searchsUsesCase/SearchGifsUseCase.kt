@@ -1,4 +1,4 @@
-package com.example.megagifs.screenprincipal.domain.searchs
+package com.example.megagifs.screenprincipal.domain.searchsUsesCase
 
 import com.example.megagifs.screenprincipal.data.network.GifsRepository
 import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
@@ -16,7 +16,5 @@ import javax.inject.Inject
 class SearchGifsUseCase @Inject constructor(
     private val repository: GifsRepository
 ) {
-     suspend operator fun invoke(search:String): GifsResponse? {
-        return repository.getSearchGifs(search)
-    }
+     suspend operator fun invoke(search:String): GifsResponse? = repository.getSearchGifs(search)
 }

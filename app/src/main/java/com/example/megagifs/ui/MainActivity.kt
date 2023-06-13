@@ -62,20 +62,37 @@ class MainActivity : ComponentActivity() {
                         composable(
                             DetailsScreen.route,
                             arguments = listOf(
-                                navArgument("id") {
+                                navArgument("url") {
                                     defaultValue = ""
                                 },
                                 navArgument("type") {
                                     defaultValue = 0
+                                },
+                                navArgument("avatar") {
+                                    defaultValue = ""
+                                },
+                                navArgument("displayName") {
+                                    defaultValue = ""
+                                },
+                                navArgument("userName") {
+                                    defaultValue = ""
+                                },
+                                navArgument("verified") {
+                                    defaultValue = false
                                 }
                             )
                         ) { backStackEntry ->
                             backStackEntry.arguments?.let {
-                                it.getString("id")?.let { id ->
+                                it.getString("url")?.let { url ->
                                     DetailsScreen(
                                         navigationController,
                                         it.getInt("type"),
-                                        id, "", "", "", detailsViewModel
+                                        url,
+                                        it.getString("avatar")!!,
+                                        it.getString("displayName")!!,
+                                        it.getString("userName")!!,
+                                        it.getBoolean("verified"),
+                                        principalViewModel
                                     )
                                 }
                             }

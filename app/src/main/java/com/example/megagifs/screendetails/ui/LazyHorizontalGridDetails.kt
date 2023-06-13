@@ -1,4 +1,4 @@
-package com.example.megagifs.screenprincipal.ui.components
+package com.example.megagifs.screendetails.ui
 
 import android.os.Build
 import android.util.Log
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +40,7 @@ import com.example.megagifs.model.Types
 import com.example.megagifs.screenprincipal.data.network.response.GifItem
 import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -56,12 +58,12 @@ import kotlinx.coroutines.withContext
  *****/
 
 @Composable
-fun LazyVerticalGridPrincipal(
+fun LazyHorizontalGridDetails(
     navController: NavHostController,
     principalScreenViewModel: PrincipalScreenViewModel,
     modifier: Modifier,
     rvState: LazyGridState,
-    type: Int = 0,
+    type: Int,
     search: String
 ) {
 
@@ -73,9 +75,6 @@ fun LazyVerticalGridPrincipal(
     }
 
     var result: GifsResponse? = null
-    val resultGifs by principalScreenViewModel.resultGifs.observeAsState(initial = null)
-    val resultStickers by principalScreenViewModel.resultStickers.observeAsState(initial = null)
-    val resultEmojis by principalScreenViewModel.resultEmojis.observeAsState(initial = null)
     val resultSearchGifs by principalScreenViewModel.resultSearchGifs.observeAsState(initial = null)
     val resultSearchStickers by principalScreenViewModel.resultSearchStickers.observeAsState(initial = null)
 
@@ -85,28 +84,14 @@ fun LazyVerticalGridPrincipal(
         if (showProgress)
             ProgressBarPrincipal()
 
-        LazyVerticalGrid(
+        LazyHorizontalGrid(
             modifier = modifier,
             state = rvState,
-            columns = if (type != Types.Emojis.type) GridCells.Fixed(2) else GridCells.Fixed(4),
+            rows = GridCells.Fixed(1),
             content = {
                 when (type) {
-                    Types.Gifs.type -> {
-                        if (firstTime) {
-                            coroutineScope.launch {
-                                principalScreenViewModel.onShowProgress(true)
-                                val deferred = listOf(
-                                    async { principalScreenViewModel.onGetGifs() }
-                                )
-                                deferred.awaitAll()
-                                principalScreenViewModel.onShowProgress(false)
-                            }
-                            firstTime = false
-                        }
-                        result = resultGifs
-                    }
-
-                    Types.SearchGifs.type -> {
+                    Types.SearchGifs.type,
+                    Types.SearchEmojis.type-> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -128,30 +113,6 @@ fun LazyVerticalGridPrincipal(
                         }
                         Log.i(TAG, "3")
                         result = resultSearchStickers
-                    }
-
-                    Types.Emojis.type -> {
-                        coroutineScope.launch {
-                            if (firstTime)
-                                principalScreenViewModel.onShowProgress(true)
-                            principalScreenViewModel.onGetEmojis()
-                            principalScreenViewModel.onShowProgress(false)
-                            firstTime = false
-                        }
-                        Log.i(TAG, "4")
-                        result = resultEmojis
-                    }
-
-                    Types.Stickers.type -> {
-                        coroutineScope.launch {
-                            if (firstTime)
-                                principalScreenViewModel.onShowProgress(true)
-                            principalScreenViewModel.onGetStickers()
-                            principalScreenViewModel.onShowProgress(false)
-                            firstTime = false
-                        }
-                        Log.i(TAG, "5")
-                        result = resultStickers
                     }
                 }
 
@@ -176,6 +137,7 @@ fun LazyVerticalGridPrincipal(
                                         else Color.Transparent
                                     )
                                     .clickable {
+                                        //Pasar este Item al bloque superior de la pantalla details
                                         if(item.user != null) {
                                             navController.navigate(
                                                 Routes.DetailsScreen.createRoute(

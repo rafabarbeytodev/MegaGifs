@@ -16,7 +16,6 @@ import javax.inject.Inject
 class GifsRepository @Inject constructor(
     private val api: GifsService
 ) {
-    //private val api = GifsService()
     suspend fun getTrendingGifs(): GifsResponse? {
         return api.getTrendingGifs()
     }

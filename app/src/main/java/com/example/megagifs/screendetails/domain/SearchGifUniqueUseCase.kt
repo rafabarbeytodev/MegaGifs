@@ -16,8 +16,5 @@ import javax.inject.Inject
 class SearchGifUniqueUseCase @Inject constructor(
     private val repository: GifUniqueRepository
 ) {
-    suspend operator fun invoke(id:String): GifUniqueResponse? {
-        return repository.getGif(id)
-    }
-
+    suspend operator fun invoke(id:String): GifUniqueResponse? = repository.getGif(id)
 }

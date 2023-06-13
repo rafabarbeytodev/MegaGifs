@@ -49,7 +49,11 @@ fun BottomNavigationPrincipal(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.Gray,
                 onClick = {
-                    navController.navigate(Routes.PrincipalScreen.createRoute(Types.Gifs.type, ""))
+                    navController.navigate(
+                        Routes.PrincipalScreen.createRoute(
+                            Types.Gifs.type
+                        )
+                    )
                 }
             )
             BottomNavigationItem(selected = type == 1, icon = {
@@ -64,8 +68,7 @@ fun BottomNavigationPrincipal(
                 onClick = {
                     navController.navigate(
                         Routes.PrincipalScreen.createRoute(
-                            Types.Emojis.type,
-                            ""
+                            Types.Emojis.type
                         )
                     )
                 }
@@ -85,8 +88,7 @@ fun BottomNavigationPrincipal(
                 onClick = {
                     navController.navigate(
                         Routes.PrincipalScreen.createRoute(
-                            Types.Stickers.type,
-                            ""
+                            Types.Stickers.type
                         )
                     )
                 }

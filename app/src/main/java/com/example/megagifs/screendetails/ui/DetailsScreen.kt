@@ -9,11 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -32,6 +38,8 @@ import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.megagifs.model.Routes.*
+import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.google.android.gms.drive.Metadata
 
 /*****
  * Proyect: MegaGifs
@@ -51,8 +59,11 @@ fun DetailsScreen(
     avatar: String,
     displayName: String,
     userName: String,
-    detailsViewModel: DetailsScreenViewModel,
+    verified: Boolean,
+    principalViewModel: PrincipalScreenViewModel,
 ) {
+
+    val rvState = rememberLazyGridState()
 
     Column(
         modifier = Modifier
@@ -93,7 +104,11 @@ fun DetailsScreen(
                 modifier = Modifier
                     .padding(start = 210.dp, top = 8.dp)
                     .clickable {
-                        navController.navigate(PrincipalScreen.createRoute(type, ""))
+                        if (type > 3)
+                            navController.navigate(PrincipalScreen.createRoute(type - 4))
+                        else
+                            navController.navigate(PrincipalScreen.createRoute(type))
+
                     },
                 tint = Color.Yellow,
                 imageVector = Icons.Filled.Close,
@@ -104,9 +119,11 @@ fun DetailsScreen(
         GifImage(
             url,
             modifier = Modifier
+                .align(Alignment.CenterHorizontally)
                 .background(Color.Transparent)
+                .weight(0.35f)
                 .clickable {
-                    navController.navigate(PrincipalScreen.createRoute(type, ""))
+                    navController.navigate(PrincipalScreen.createRoute(type))
                 }, 1
         )
 
@@ -119,32 +136,64 @@ fun DetailsScreen(
             GifImage(
                 avatar,
                 modifier = Modifier
-                    .background(Color.Transparent), 0
+                    .background(Color.Transparent)
+                    .padding(16.dp), 0
             )
-            Column(Modifier.align(Alignment.CenterVertically)) {
+            Column(
+                Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(8.dp)
+            ) {
                 Text(
-                    text = displayName, color = Color.White,
+                    text = displayName,
+                    color = Color.White,
                     fontFamily = FontFamily.Serif,
                     fontStyle = FontStyle.Italic,
                     fontSize = 16.sp
                 )
 
-                Text(
-                    text = userName, color = Color.White,
-                    fontFamily = FontFamily.Serif,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 16.sp
-                )
+                Row {
+                    Text(
+                        text = "@$userName",
+                        color = Color.White,
+                        fontFamily = FontFamily.Serif,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 16.sp,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    if (verified) {
+                        Icon(
+                            imageVector = Icons.Filled.Verified,
+                            contentDescription = "",
+                            tint = Color.Cyan,
+                            modifier = Modifier.padding(4.dp)
+                        )
+                    }
+                }
+
             }
         }
 
         Box(
             Modifier
-                .background(Color.Green)
-                .weight(0.35f)
+                //.background(Color.Green)
+                .weight(0.30f)
                 .fillMaxWidth()
         ) {
-            Text(text = "Aqui pueden ir otros gifs del mismo usuario en un lazyhorizontal")
+            LazyHorizontalGridDetails(
+                navController = navController,
+                principalScreenViewModel = principalViewModel,
+                modifier = Modifier
+                    .padding(
+                        bottom = 8.dp,
+                        top = 8.dp,
+                        start = 8.dp,
+                        end = 8.dp
+                    ),
+                type = if (type > 3) type else type + 4,
+                rvState = rvState,
+                search = userName
+            )
         }
         Box(
             Modifier
@@ -161,7 +210,9 @@ fun DetailsScreen(
 fun GifImage(
     url: String, modifier: Modifier, image: Int
 ) {
+
     val context = LocalContext.current
+
     val imageLoader = ImageLoader.Builder(context)
         .componentRegistry {
             if (Build.VERSION.SDK_INT >= 28) {
@@ -170,7 +221,9 @@ fun GifImage(
                 add(GifDecoder())
             }
         }
+        .allowHardware(false)
         .build()
+
     Image(
         painter = rememberImagePainter(url, imageLoader),
         contentDescription = null,

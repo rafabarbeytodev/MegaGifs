@@ -1,4 +1,4 @@
-package com.example.megagifs.screenprincipal.domain.trendings
+package com.example.megagifs.screenprincipal.domain.trendingsUsesCase
 
 import com.example.megagifs.screenprincipal.data.network.GifsRepository
 import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
@@ -13,10 +13,8 @@ import javax.inject.Inject
  *
  * All rights reserved 2023.
  *****/
-class TrendingEmojisUseCase @Inject constructor(
+class TrendingStickersUseCase @Inject constructor(
     private val repository: GifsRepository
 ) {
-    suspend operator fun invoke(): GifsResponse? {
-        return repository.getTrendingEmojis()
-    }
+    suspend operator fun invoke(): GifsResponse? = repository.getTrendingStickers()
 }

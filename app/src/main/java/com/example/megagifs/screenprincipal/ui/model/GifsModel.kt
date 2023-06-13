@@ -1,18 +1,20 @@
-package com.example.megagifs.screenprincipal.data.network.response
+package com.example.megagifs.screenprincipal.ui.model
 
 import com.google.gson.annotations.SerializedName
 
 /*****
  * Proyect: MegaGifs
- * Package: com.example.megagifs.screen6.data.network.response
+ * Package: com.example.megagifs.screenprincipal.ui.model
  *
- * Created by Rafael Barbeyto Torrellas on 01/06/2023 at 16:46
+ * Created by Rafael Barbeyto Torrellas on 12/06/2023 at 14:03
  * More info: https://www.linkedin.com/in/rafa-barbeyto/
  *
  * All rights reserved 2023.
  *****/
-data class GifsResponse(
-    @SerializedName("data") val data: List<GifItem>
+data class GifsModel(
+    @SerializedName("data") val data: List<GifItem>,
+    @SerializedName("pagination") val pagination: Pagination,
+    @SerializedName("meta") val meta: Meta
 )
 data class GifItem(
     @SerializedName("type") val type: String,
@@ -65,6 +67,7 @@ data class GifImages(
     @SerializedName("downsized") val downsized: GifImage,
     @SerializedName("downsized_large") val downsized_large: GifImage,
     @SerializedName("downsized_medium") val downsized_medium: GifImage,
+    @SerializedName("downsized_small") val downsized_small: GifSmallImage,
     @SerializedName("downsized_still") val downsized_still: GifImage,
     @SerializedName("fixed_height") val fixed_height: GifImage,
     @SerializedName("fixed_height_downsampled") val fixed_height_downsampled: GifImage,
@@ -90,4 +93,21 @@ data class GifImage(
     @SerializedName("webp") val webp: String,
     @SerializedName("frames") val frames: String,
     @SerializedName("hash") val hash: String
+)
+
+data class GifSmallImage(
+    @SerializedName("height") val height: String,
+    @SerializedName("width") val width: String,
+    @SerializedName("mp4_size") val mp4_size: String,
+    @SerializedName("mp4") val mp4: String
+)
+data class Pagination(
+    @SerializedName("total_count") val total_count: Int,
+    @SerializedName("count") val count: Int,
+    @SerializedName("offset") val offset: Int
+)
+data class Meta(
+    @SerializedName("status") val status: Int,
+    @SerializedName("msg") val msg: String,
+    @SerializedName("response_id") val response_id: String
 )
