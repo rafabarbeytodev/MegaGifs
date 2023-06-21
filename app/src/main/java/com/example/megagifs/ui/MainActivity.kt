@@ -26,10 +26,10 @@ class MainActivity : ComponentActivity() {
     private val principalViewModel: PrincipalScreenViewModel by viewModels()
     private val detailsViewModel: DetailsScreenViewModel by viewModels()
 
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         setContent {
             MegaGifsTheme {
@@ -92,7 +92,8 @@ class MainActivity : ComponentActivity() {
                                         it.getString("displayName")!!,
                                         it.getString("userName")!!,
                                         it.getBoolean("verified"),
-                                        principalViewModel
+                                        principalViewModel,
+                                        detailsViewModel
                                     )
                                 }
                             }

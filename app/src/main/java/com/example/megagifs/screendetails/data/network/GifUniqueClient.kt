@@ -16,8 +16,6 @@ import retrofit2.http.Path
  * All rights reserved 2023.
  *****/
 interface GifUniqueClient {
-
     @GET("/v1/gifs/{id}?api_key=$API_KEY&gif_id=&random_id&rating")
     suspend fun getGif(@Path("id") id: String): Response<GifUniqueResponse>
-
 }

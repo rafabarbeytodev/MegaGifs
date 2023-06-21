@@ -2,7 +2,6 @@ package com.example.megagifs.screenprincipal.ui.components
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,21 +28,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.megagifs.core.TAG
 import com.example.megagifs.model.Routes
 import com.example.megagifs.model.Types
-import com.example.megagifs.screenprincipal.data.network.response.GifItem
 import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /*****
  * Proyect: MegaGifs
@@ -88,7 +83,7 @@ fun LazyVerticalGridPrincipal(
         LazyVerticalGrid(
             modifier = modifier,
             state = rvState,
-            columns = if (type != Types.Emojis.type) GridCells.Fixed(2) else GridCells.Fixed(4),
+            columns = if (type != Types.Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(4),
             content = {
                 when (type) {
                     Types.Gifs.type -> {
@@ -162,6 +157,7 @@ fun LazyVerticalGridPrincipal(
                             item.images.fixed_height.height.toInt() - item.images.fixed_height.width.toInt()
                         val url =
                             if (positionImage < 0) item.images.fixed_width.url else item.images.fixed_height.url
+                            //"https://media4.giphy.com/media/8THknlEuMYwYRXhYXy/480w_s.jpg?cid=f09f2c2135l8x9fzi3uker3j2ah9c0q6chps5qaaslhv4h3d&ep=v1_stickers_trending&rid=480w_s.jpg&ct=s"
                         Card(
                             elevation = 8.dp,
                             shape = RoundedCornerShape(8.dp),

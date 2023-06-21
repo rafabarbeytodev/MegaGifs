@@ -15,6 +15,4 @@ import javax.inject.Singleton
 @Singleton
 class GifRepository @Inject constructor(
     private val gifDao: GifDao) {
-
-
 }

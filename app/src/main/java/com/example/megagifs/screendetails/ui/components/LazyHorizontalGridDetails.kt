@@ -1,8 +1,7 @@
-package com.example.megagifs.screendetails.ui
+package com.example.megagifs.screendetails.ui.components
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -30,22 +28,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.megagifs.core.TAG
 import com.example.megagifs.model.Routes
 import com.example.megagifs.model.Types
-import com.example.megagifs.screenprincipal.data.network.response.GifItem
 import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /*****
  * Proyect: MegaGifs
@@ -68,7 +60,6 @@ fun LazyHorizontalGridDetails(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     var firstTime by rememberSaveable {
         mutableStateOf(true)
@@ -133,7 +124,7 @@ fun LazyHorizontalGridDetails(
                                 positionImage, url, modifier = Modifier
                                     .aspectRatio(1f)
                                     .background(
-                                        if (type == Types.Stickers.type) Color.DarkGray
+                                        if (type == Types.SearchStickers.type) Color.DarkGray
                                         else Color.Transparent
                                     )
                                     .clickable {

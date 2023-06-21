@@ -1,6 +1,5 @@
 package com.example.megagifs.screendetails.data.network
 
-import android.util.Log
 import com.example.megagifs.screendetails.data.network.response.GifUniqueResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,21 +18,19 @@ class GifUniqueService @Inject constructor(
     private val gifUniqueClient: GifUniqueClient
 ) {
 
-    //private val retrofit = RetrofitHelper.getRetrofit()
-
     suspend fun getGif(id: String): GifUniqueResponse? {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             try {
                 val response = gifUniqueClient.getGif(id)
                 if (response.isSuccessful) {
-                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    //RESPUESTA OK
                     response.body()
                 } else {
-                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    //RESPUESTA NOK
                     null
                 }
-            }catch(e:Exception){
-                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+            } catch (e: Exception) {
+                //ERROR EN RESPUESTA API
                 null
             }
         }

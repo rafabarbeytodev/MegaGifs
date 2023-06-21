@@ -1,6 +1,5 @@
 package com.example.megagifs.screenprincipal.data.network
 
-import android.util.Log
 import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,14 +23,14 @@ class GifsService @Inject constructor(
             try {
                 val response = gifsClient.getTrendingGifs()
                 if (response.isSuccessful) {
-                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                   //RESPUESTA OK
                     response.body()
                 } else {
-                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    //RESPUESTA NOK
                     null
                 }
             }catch(e:Exception){
-                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                //ERROR EN RESPUESTA API
                 null
             }
         }
@@ -41,14 +40,14 @@ class GifsService @Inject constructor(
             try {
                 val response = gifsClient.getTrendingStickers()
                 if (response.isSuccessful) {
-                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    //RESPUESTA OK
                     response.body()
                 } else {
-                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    //RESPUESTA NOK
                     null
                 }
             }catch(e:Exception){
-                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                //ERROR EN RESPUESTA API
                 null
             }
         }
@@ -58,14 +57,14 @@ class GifsService @Inject constructor(
             try {
                 val response = gifsClient.getTrendingEmojis()
                 if (response.isSuccessful) {
-                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    //RESPUESTA OK
                     response.body()
                 } else {
-                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    //RESPUESTA NOK
                     null
                 }
             }catch(e:Exception){
-                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                //ERROR EN RESPUESTA API
                 null
             }
         }
@@ -75,14 +74,14 @@ class GifsService @Inject constructor(
             try {
                 val response = gifsClient.getSearchGifs(search)
                 if (response.isSuccessful) {
-                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    //RESPUESTA OK
                     response.body()
                 } else {
-                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    //RESPUESTA NOK
                     null
                 }
             }catch(e:Exception){
-                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                //ERROR EN RESPUESTA API
                 null
             }
         }
@@ -92,14 +91,14 @@ class GifsService @Inject constructor(
             try {
                 val response = gifsClient.getSearchStickers(search)
                 if (response.isSuccessful) {
-                    Log.i("DEVELOPRAFA", "RESPUESTA OK")
+                    //RESPUESTA OK
                     response.body()
                 } else {
-                    Log.i("DEVELOPRAFA", "RESPUESTA NOK : ${response.message()}")
+                    //RESPUESTA NOK
                     null
                 }
             }catch(e:Exception){
-                Log.i("DEVELOPRAFA", "ERROR EN RESPUESTA API: ${e.message.toString()}")
+                //ERROR EN RESPUESTA API
                 null
             }
         }
