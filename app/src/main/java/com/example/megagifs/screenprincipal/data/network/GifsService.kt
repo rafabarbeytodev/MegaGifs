@@ -1,6 +1,7 @@
 package com.example.megagifs.screenprincipal.data.network
 
-import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
+import com.example.megagifs.screenprincipal.data.network.entity.GifsEntity
+import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class GifsService @Inject constructor(
     private val gifsClient: GifsClient
 ) {
-    suspend fun getTrendingGifs(): GifsResponse? {
+    suspend fun getTrendingGifs(): GifsEntity? {
         return withContext(Dispatchers.IO){
             try {
                 val response = gifsClient.getTrendingGifs()
@@ -35,7 +36,7 @@ class GifsService @Inject constructor(
             }
         }
     }
-    suspend fun getTrendingStickers(): GifsResponse? {
+    suspend fun getTrendingStickers(): GifsEntity? {
         return withContext(Dispatchers.IO){
             try {
                 val response = gifsClient.getTrendingStickers()
@@ -52,7 +53,7 @@ class GifsService @Inject constructor(
             }
         }
     }
-    suspend fun getTrendingEmojis(): GifsResponse? {
+    suspend fun getTrendingEmojis(): GifsEntity? {
         return withContext(Dispatchers.IO){
             try {
                 val response = gifsClient.getTrendingEmojis()
@@ -69,7 +70,7 @@ class GifsService @Inject constructor(
             }
         }
     }
-    suspend fun getSearchGifs(search: String): GifsResponse? {
+    suspend fun getSearchGifs(search: String): GifsEntity? {
         return withContext(Dispatchers.IO){
             try {
                 val response = gifsClient.getSearchGifs(search)
@@ -86,7 +87,7 @@ class GifsService @Inject constructor(
             }
         }
     }
-    suspend fun getSearchStickers(search: String): GifsResponse? {
+    suspend fun getSearchStickers(search: String): GifsEntity? {
         return withContext(Dispatchers.IO){
             try {
                 val response = gifsClient.getSearchStickers(search)

@@ -1,4 +1,4 @@
-package com.example.megagifs.screendetails.data.network.response
+package com.example.megagifs.screendetails.data.network.entity
 
 import com.google.gson.annotations.SerializedName
 
@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName
  *
  * All rights reserved 2023.
  *****/
-data class GifUniqueResponse(
+data class GifUniqueEntity(
     @SerializedName("data") val data: GifUniqueItem,
     @SerializedName("meta") val meta: MetaUnique
 )

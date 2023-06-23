@@ -1,4 +1,4 @@
-package com.example.megagifs.screenprincipal.data.network.response
+package com.example.megagifs.screenprincipal.data.network.entity
 
 import com.google.gson.annotations.SerializedName
 
@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName
  *
  * All rights reserved 2023.
  *****/
-data class CategoriesResponse(
+data class CategoriesEntity(
     @SerializedName("name") val name: String,
     @SerializedName("name_encoded") val name_encoded: String,
     @SerializedName("subcategories") val subcategories: List<Subcategory>,

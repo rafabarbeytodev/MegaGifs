@@ -1,6 +1,6 @@
 package com.example.megagifs.screendetails.data.network
 
-import com.example.megagifs.screendetails.data.network.response.GifUniqueResponse
+import com.example.megagifs.screendetails.data.network.entity.GifUniqueEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class GifUniqueService @Inject constructor(
     private val gifUniqueClient: GifUniqueClient
 ) {
 
-    suspend fun getGif(id: String): GifUniqueResponse? {
+    suspend fun getGif(id: String): GifUniqueEntity? {
         return withContext(Dispatchers.IO) {
             try {
                 val response = gifUniqueClient.getGif(id)

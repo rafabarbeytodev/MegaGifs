@@ -1,7 +1,7 @@
 package com.example.megagifs.screendetails.data.network
 
 import com.example.megagifs.core.API_KEY
-import com.example.megagifs.screendetails.data.network.response.GifUniqueResponse
+import com.example.megagifs.screendetails.data.network.entity.GifUniqueEntity
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,5 +17,5 @@ import retrofit2.http.Path
  *****/
 interface GifUniqueClient {
     @GET("/v1/gifs/{id}?api_key=$API_KEY&gif_id=&random_id&rating")
-    suspend fun getGif(@Path("id") id: String): Response<GifUniqueResponse>
+    suspend fun getGif(@Path("id") id: String): Response<GifUniqueEntity>
 }

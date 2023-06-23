@@ -51,7 +51,7 @@ import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.megagifs.core.TAG
-import com.example.megagifs.model.Routes.PrincipalScreen
+import com.example.megagifs.core.Routes.PrincipalScreen
 import com.example.megagifs.screendetails.ui.components.DialogPermission
 import com.example.megagifs.screendetails.ui.components.LazyHorizontalGridDetails
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
@@ -404,7 +404,7 @@ fun DetailsScreen(
                 .weight(0.10f)
                 .fillMaxWidth()
         ) {
-            Text(text = "Aqui va la publidad")
+            Text(text = "")
         }
     }
 }

@@ -32,10 +32,11 @@ import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.megagifs.core.TAG
-import com.example.megagifs.model.Routes
-import com.example.megagifs.model.Types
-import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
+import com.example.megagifs.core.Routes
+import com.example.megagifs.core.Types
+import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -61,13 +62,12 @@ fun LazyVerticalGridPrincipal(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     var firstTime by rememberSaveable {
         mutableStateOf(true)
     }
 
-    var result: GifsResponse? = null
+    var result: GifsModel? = null
     val resultGifs by principalScreenViewModel.resultGifs.observeAsState(initial = null)
     val resultStickers by principalScreenViewModel.resultStickers.observeAsState(initial = null)
     val resultEmojis by principalScreenViewModel.resultEmojis.observeAsState(initial = null)
@@ -83,10 +83,10 @@ fun LazyVerticalGridPrincipal(
         LazyVerticalGrid(
             modifier = modifier,
             state = rvState,
-            columns = if (type != Types.Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(4),
+            columns = if (type != Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(4),
             content = {
                 when (type) {
-                    Types.Gifs.type -> {
+                    Gifs.type -> {
                         if (firstTime) {
                             coroutineScope.launch {
                                 principalScreenViewModel.onShowProgress(true)
@@ -101,7 +101,7 @@ fun LazyVerticalGridPrincipal(
                         result = resultGifs
                     }
 
-                    Types.SearchGifs.type -> {
+                    SearchGifs.type -> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -113,7 +113,7 @@ fun LazyVerticalGridPrincipal(
                         result = resultSearchGifs
                     }
 
-                    Types.SearchStickers.type -> {
+                    SearchStickers.type -> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -125,7 +125,7 @@ fun LazyVerticalGridPrincipal(
                         result = resultSearchStickers
                     }
 
-                    Types.Emojis.type -> {
+                    Emojis.type -> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -137,7 +137,7 @@ fun LazyVerticalGridPrincipal(
                         result = resultEmojis
                     }
 
-                    Types.Stickers.type -> {
+                    Stickers.type -> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -151,13 +151,12 @@ fun LazyVerticalGridPrincipal(
                 }
 
                 result?.let {
-                    items(it.data) { item ->
+                    items(it.data) {item ->
 
                         val positionImage =
                             item.images.fixed_height.height.toInt() - item.images.fixed_height.width.toInt()
                         val url =
                             if (positionImage < 0) item.images.fixed_width.url else item.images.fixed_height.url
-                            //"https://media4.giphy.com/media/8THknlEuMYwYRXhYXy/480w_s.jpg?cid=f09f2c2135l8x9fzi3uker3j2ah9c0q6chps5qaaslhv4h3d&ep=v1_stickers_trending&rid=480w_s.jpg&ct=s"
                         Card(
                             elevation = 8.dp,
                             shape = RoundedCornerShape(8.dp),
@@ -168,7 +167,7 @@ fun LazyVerticalGridPrincipal(
                                 positionImage, url, modifier = Modifier
                                     .aspectRatio(1f)
                                     .background(
-                                        if (type == Types.Stickers.type) Color.DarkGray
+                                        if (type == Stickers.type || type == SearchStickers.type ) Color.DarkGray
                                         else Color.Transparent
                                     )
                                     .clickable {

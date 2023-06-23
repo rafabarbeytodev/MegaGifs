@@ -1,4 +1,4 @@
-package com.example.megagifs.core.di
+package com.example.megagifs.di
 
 import com.example.megagifs.screendetails.data.network.GifUniqueClient
 import com.example.megagifs.screenprincipal.data.network.GifsClient

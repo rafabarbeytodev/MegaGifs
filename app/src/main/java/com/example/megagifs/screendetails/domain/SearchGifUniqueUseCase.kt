@@ -1,7 +1,7 @@
 package com.example.megagifs.screendetails.domain
 
 import com.example.megagifs.screendetails.data.network.GifUniqueRepository
-import com.example.megagifs.screendetails.data.network.response.GifUniqueResponse
+import com.example.megagifs.screendetails.data.network.entity.GifUniqueEntity
 import javax.inject.Inject
 
 /*****
@@ -16,5 +16,5 @@ import javax.inject.Inject
 class SearchGifUniqueUseCase @Inject constructor(
     private val repository: GifUniqueRepository
 ) {
-    suspend operator fun invoke(id:String): GifUniqueResponse? = repository.getGif(id)
+    suspend operator fun invoke(id:String): GifUniqueEntity? = repository.getGif(id)
 }

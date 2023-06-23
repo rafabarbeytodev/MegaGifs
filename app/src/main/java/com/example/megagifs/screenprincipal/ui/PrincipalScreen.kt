@@ -21,7 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
-import com.example.megagifs.model.Types
+import com.example.megagifs.core.Types
+import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenprincipal.ui.components.BottomNavigationPrincipal
 import com.example.megagifs.screenprincipal.ui.components.DrawerPrincipal
 import com.example.megagifs.screenprincipal.ui.components.FabPrincipal
@@ -54,7 +55,7 @@ fun PrincipalScreen(
         Scaffold(
             scaffoldState = scaffoldState,
             topBar = {
-                    if (type != Types.Emojis.type)
+                    if (type != Emojis.type)
                         SearchBarPrincipal(onClickDrawer = {
                             coroutineScope.launch {
                                 scaffoldState.drawerState.open()
@@ -103,7 +104,7 @@ fun PrincipalScreen(
                 .height(70.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Aqui irá la publicidad")
+            Text(text = "")
         }
     }
 }

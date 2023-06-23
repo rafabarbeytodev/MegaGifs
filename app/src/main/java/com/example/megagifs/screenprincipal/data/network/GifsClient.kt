@@ -1,7 +1,7 @@
 package com.example.megagifs.screenprincipal.data.network
 
 import com.example.megagifs.core.API_KEY
-import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
+import com.example.megagifs.screenprincipal.data.network.entity.GifsEntity
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -17,19 +17,19 @@ import retrofit2.http.Query
  *****/
 interface GifsClient {
     @GET("/v1/gifs/trending?api_key=$API_KEY&limit&random_id&offset&rating&bundle")
-    suspend fun getTrendingGifs(): Response<GifsResponse>
+    suspend fun getTrendingGifs(): Response<GifsEntity>
 
     @GET("/v1/stickers/trending?api_key=$API_KEY&limit&random_id&offset&rating&bundle")
-    suspend fun getTrendingStickers(): Response<GifsResponse>
+    suspend fun getTrendingStickers(): Response<GifsEntity>
 
     @GET("/v2/emoji?api_key=$API_KEY&limit&offset")
-    suspend fun getTrendingEmojis(): Response<GifsResponse>
+    suspend fun getTrendingEmojis(): Response<GifsEntity>
 
     @GET("/v1/gifs/search?api_key=$API_KEY")
-    suspend fun getSearchGifs(@Query("q") q: String): Response<GifsResponse>
+    suspend fun getSearchGifs(@Query("q") q: String): Response<GifsEntity>
 
     @GET("/v1/stickers/search?api_key=$API_KEY")
-    suspend fun getSearchStickers(@Query("q") q: String): Response<GifsResponse>
+    suspend fun getSearchStickers(@Query("q") q: String): Response<GifsEntity>
 
 
 }

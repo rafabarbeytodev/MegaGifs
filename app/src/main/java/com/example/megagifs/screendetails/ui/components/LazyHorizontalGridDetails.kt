@@ -32,11 +32,13 @@ import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.megagifs.core.TAG
-import com.example.megagifs.model.Routes
-import com.example.megagifs.model.Types
-import com.example.megagifs.screenprincipal.data.network.response.GifsResponse
+import com.example.megagifs.core.Routes
+import com.example.megagifs.core.Types
+import com.example.megagifs.core.Types.*
+import com.example.megagifs.screenprincipal.data.network.entity.GifsEntity
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
+import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import kotlinx.coroutines.launch
 
 /*****
@@ -65,7 +67,7 @@ fun LazyHorizontalGridDetails(
         mutableStateOf(true)
     }
 
-    var result: GifsResponse? = null
+    var result: GifsModel? = null
     val resultSearchGifs by principalScreenViewModel.resultSearchGifs.observeAsState(initial = null)
     val resultSearchStickers by principalScreenViewModel.resultSearchStickers.observeAsState(initial = null)
 
@@ -81,8 +83,8 @@ fun LazyHorizontalGridDetails(
             rows = GridCells.Fixed(1),
             content = {
                 when (type) {
-                    Types.SearchGifs.type,
-                    Types.SearchEmojis.type-> {
+                    SearchGifs.type,
+                    SearchEmojis.type-> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -94,7 +96,7 @@ fun LazyHorizontalGridDetails(
                         result = resultSearchGifs
                     }
 
-                    Types.SearchStickers.type -> {
+                    SearchStickers.type -> {
                         coroutineScope.launch {
                             if (firstTime)
                                 principalScreenViewModel.onShowProgress(true)
@@ -124,7 +126,7 @@ fun LazyHorizontalGridDetails(
                                 positionImage, url, modifier = Modifier
                                     .aspectRatio(1f)
                                     .background(
-                                        if (type == Types.SearchStickers.type) Color.DarkGray
+                                        if (type == SearchStickers.type) Color.DarkGray
                                         else Color.Transparent
                                     )
                                     .clickable {

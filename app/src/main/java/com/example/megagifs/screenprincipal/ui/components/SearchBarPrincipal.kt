@@ -20,11 +20,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.megagifs.model.Routes
-import com.example.megagifs.model.Types
+import com.example.megagifs.core.Routes
+import com.example.megagifs.core.Types
+import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import kotlinx.coroutines.launch
 
@@ -70,28 +70,28 @@ fun SearchBarPrincipal(
             IconButton(
                 onClick = {
                     when (type) {
-                        Types.Gifs.type,Types.SearchGifs.type -> {
+                        Gifs.type, SearchGifs.type -> {
                             coroutineScope.launch {
                                 principalScreenViewModel.onGetSearchGifs(query)
                                 navController.navigate(
                                     Routes.PrincipalScreen.createRoute(
-                                        Types.SearchGifs.type,
+                                        SearchGifs.type,
                                         query
                                     )
                                 )
                             }
                         }
 
-                        Types.Emojis.type,Types.SearchEmojis.type -> {
+                        Emojis.type, SearchEmojis.type -> {
 
                         }
 
-                        Types.Stickers.type,Types.SearchStickers.type -> {
+                        Stickers.type, SearchStickers.type -> {
                             coroutineScope.launch {
                                 principalScreenViewModel.onGetSearchStickers(query)
                                 navController.navigate(
                                     Routes.PrincipalScreen.createRoute(
-                                        Types.SearchStickers.type,
+                                        SearchStickers.type,
                                         query
                                     )
                                 )

@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.megagifs.screenprincipal.ui.PrincipalScreen
-import com.example.megagifs.model.Routes.*
+import com.example.megagifs.core.Routes.*
 import com.example.megagifs.screendetails.ui.DetailsScreen
 import com.example.megagifs.screendetails.ui.DetailsScreenViewModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel

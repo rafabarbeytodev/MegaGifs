@@ -10,7 +10,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.megagifs.screendetails.data.network.response.GifUniqueItem
+import com.example.megagifs.screendetails.data.network.entity.GifUniqueItem
 import com.example.megagifs.screendetails.domain.SearchGifUniqueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

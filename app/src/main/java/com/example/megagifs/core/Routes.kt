@@ -1,6 +1,4 @@
-package com.example.megagifs.model
-
-import com.example.megagifs.screenprincipal.data.network.response.GifItem
+package com.example.megagifs.core
 
 /*****
  * Proyect: MegaGifs

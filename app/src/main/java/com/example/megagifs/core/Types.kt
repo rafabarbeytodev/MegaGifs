@@ -1,4 +1,4 @@
-package com.example.megagifs.model
+package com.example.megagifs.core
 
 /*****
  * Proyect: MegaGifs

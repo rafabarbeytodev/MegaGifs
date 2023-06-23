@@ -1,6 +1,6 @@
 package com.example.megagifs.screendetails.data.network
 
-import com.example.megagifs.screendetails.data.network.response.GifUniqueResponse
+import com.example.megagifs.screendetails.data.network.entity.GifUniqueEntity
 import javax.inject.Inject
 
 /*****
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class GifUniqueRepository @Inject constructor(
     private val api: GifUniqueService
 ) {
-    suspend fun getGif(id: String): GifUniqueResponse? {
+    suspend fun getGif(id: String): GifUniqueEntity? {
         return api.getGif(id)
     }
 
