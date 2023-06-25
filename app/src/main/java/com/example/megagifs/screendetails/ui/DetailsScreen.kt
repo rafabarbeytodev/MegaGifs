@@ -12,18 +12,22 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CopyAll
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
@@ -41,8 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -50,6 +57,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.megagifs.R
 import com.example.megagifs.core.TAG
 import com.example.megagifs.core.Routes.PrincipalScreen
 import com.example.megagifs.screendetails.ui.components.DialogPermission
@@ -90,7 +98,7 @@ fun DetailsScreen(
 
     var shareEnabled by remember { mutableStateOf(true) }
     var singlePermission by remember { mutableStateOf("") }
-    var multiplePermission by remember { mutableStateOf( emptyArray<String>()) }
+    var multiplePermission by remember { mutableStateOf(emptyArray<String>()) }
     var bytes: ByteArray? by remember { mutableStateOf(byteArrayOf()) }
     var showDialogPermission by remember { mutableStateOf(false) }
     var firstTime by remember { mutableStateOf(true) }
@@ -126,33 +134,33 @@ fun DetailsScreen(
         }
     }
 
-   /* val requestMultiplePermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        // Verificar los resultados de los permisos solicitados
-        permissions.entries.forEach { entry ->
-            val permission = entry.key
-            val isGranted = entry.value
-            // Realizar acciones según el resultado del permiso
-            if (isGranted) {
-                // Permiso concedido
-                // Realizar alguna acción aquí
-            } else {
-                // Permiso denegado
-                // Realizar alguna acción aquí
-            }
-        }
-    }*/
+    /* val requestMultiplePermissionLauncher = rememberLauncherForActivityResult(
+         contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+         // Verificar los resultados de los permisos solicitados
+         permissions.entries.forEach { entry ->
+             val permission = entry.key
+             val isGranted = entry.value
+             // Realizar acciones según el resultado del permiso
+             if (isGranted) {
+                 // Permiso concedido
+                 // Realizar alguna acción aquí
+             } else {
+                 // Permiso denegado
+                 // Realizar alguna acción aquí
+             }
+         }
+     }*/
 
     DialogPermission(
         showDialogPermission = showDialogPermission,
         onDismiss = { showDialogPermission = false },
         onConfirm = {
-            if(firstTime){
+            if (firstTime) {
                 //solicitamos el permiso al usuario por primera vez
                 requestPermissionLauncher.launch(singlePermission)
                 //requestMultiplePermissionLauncher.launch(multiplePermission)
                 showDialogPermission = false
-            }else{
+            } else {
                 //Enviamos al usuario a la pantalla de configuración de permisos de su  terminal
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                     addCategory(Intent.CATEGORY_DEFAULT)
@@ -226,7 +234,7 @@ fun DetailsScreen(
                 )
                 Icon(
                     modifier = Modifier
-                        .padding(top = 8.dp, bottom = 8.dp)
+                        .padding(end = 24.dp, top = 8.dp, bottom = 8.dp)
                         .clickable {
                             coroutineScope.launch(Dispatchers.IO) {
                                 bytes = detailsViewModel.getGifBytesFromUrl(url)
@@ -294,6 +302,17 @@ fun DetailsScreen(
                     imageVector = Icons.Filled.Download,
                     contentDescription = "Download"
                 )
+                Icon(
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 8.dp)
+                        .clickable {
+                            detailsViewModel.copyToClipboard(context,url)
+                            Toast.makeText(context, "Url copiada",Toast.LENGTH_SHORT).show()
+                        },
+                    tint = Color.Yellow,
+                    imageVector = Icons.Filled.CopyAll,
+                    contentDescription = "Copy"
+                )
             }
             Box(
                 Modifier
@@ -341,12 +360,14 @@ fun DetailsScreen(
                 avatar,
                 modifier = Modifier
                     .background(Color.Transparent)
-                    .padding(16.dp), 0
+                    .padding(16.dp)
+                    .weight(0.20f), 0
             )
             Column(
                 Modifier
                     .align(Alignment.CenterVertically)
                     .padding(8.dp)
+                    .weight(0.60f)
             ) {
                 Text(
                     text = displayName,
@@ -355,27 +376,34 @@ fun DetailsScreen(
                     fontStyle = FontStyle.Italic,
                     fontSize = 16.sp
                 )
-
                 Row {
-                    Text(
-                        text = "@$userName",
-                        color = Color.White,
-                        fontFamily = FontFamily.Serif,
-                        fontStyle = FontStyle.Italic,
-                        fontSize = 16.sp,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
+                    if (userName.isNotEmpty()) {
+                        Text(
+                            text = "@$userName",
+                            color = Color.White,
+                            fontFamily = FontFamily.Serif,
+                            fontStyle = FontStyle.Italic,
+                            fontSize = 16.sp,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                    }
                     if (verified) {
                         Icon(
                             imageVector = Icons.Filled.Verified,
                             contentDescription = "",
                             tint = Color.Cyan,
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(8.dp)
                         )
                     }
                 }
-
             }
+            Image(
+                painter = painterResource(id = R.drawable.poweredby_logo),
+                contentDescription = "Powered_Giphy",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(0.20f)
+            )
         }
 
         Box(

@@ -3,9 +3,11 @@ package com.example.megagifs.screenprincipal.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -51,16 +53,16 @@ fun PrincipalScreen(
 
     val rvState = rememberLazyGridState()
 
-   Column {
+    Column {
         Scaffold(
             scaffoldState = scaffoldState,
             topBar = {
-                    if (type != Emojis.type)
-                        SearchBarPrincipal(onClickDrawer = {
-                            coroutineScope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        }, type, principalViewModel, navController)
+                if (type != Emojis.type)
+                    SearchBarPrincipal(onClickDrawer = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.open()
+                        }
+                    }, type, principalViewModel, navController)
 
             },
             content = {
@@ -74,7 +76,7 @@ fun PrincipalScreen(
                         ), rvState, type, search
                 )
             },
-            bottomBar = { BottomNavigationPrincipal(navController,type) },
+            bottomBar = { BottomNavigationPrincipal(navController, type) },
             //Drawer
             drawerBackgroundColor = Color.DarkGray,
             drawerContent = {
@@ -97,11 +99,15 @@ fun PrincipalScreen(
             modifier = Modifier.weight(1f),
             backgroundColor = Color.Black
         )
+        Spacer(modifier = Modifier
+            .background(Color.Black)
+            .height(8.dp)
+            .fillMaxWidth())
         Box(
             modifier = Modifier
                 .background(Color.Red)
                 .fillMaxWidth(1f)
-                .height(70.dp),
+                .height(62.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "")

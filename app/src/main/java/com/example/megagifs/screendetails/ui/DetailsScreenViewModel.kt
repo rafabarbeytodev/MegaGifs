@@ -1,5 +1,7 @@
 package com.example.megagifs.screendetails.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
@@ -112,5 +114,11 @@ class DetailsScreenViewModel @Inject constructor(
         withContext(Dispatchers.Main) {
             Toast.makeText(context, "GIF saved to Photos", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun copyToClipboard(context: Context, url: String) {
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("url", url)
+        clipboardManager.setPrimaryClip(clipData)
     }
 }
