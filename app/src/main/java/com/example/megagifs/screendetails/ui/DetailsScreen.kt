@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,24 +17,31 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.CopyAll
-import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Verified
+import androidx.compose.material.icons.twotone.Close
+import androidx.compose.material.icons.twotone.CopyAll
+import androidx.compose.material.icons.twotone.Download
+import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -48,22 +54,33 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import coil.ImageLoader
+import coil.compose.rememberImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.megagifs.R
-import com.example.megagifs.core.TAG
+import com.example.megagifs.core.Origins.*
+import com.example.megagifs.core.Origins.Favorites
+import com.example.megagifs.core.Routes
 import com.example.megagifs.core.Routes.PrincipalScreen
+import com.example.megagifs.core.Types
+import com.example.megagifs.core.Types.*
 import com.example.megagifs.screendetails.ui.components.DialogPermission
-import com.example.megagifs.screendetails.ui.components.LazyHorizontalGridDetails
+import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
+import com.example.megagifs.screenfavorites.ui.model.FavModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
+import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -82,13 +99,18 @@ import kotlinx.coroutines.withContext
 fun DetailsScreen(
     navController: NavHostController,
     typeResource: Int,
+    origin: Int,
     url: String,
     avatar: String,
     displayName: String,
     userName: String,
     verified: Boolean,
+    id: String,
     principalViewModel: PrincipalScreenViewModel,
     detailsViewModel: DetailsScreenViewModel,
+    favoriteViewModel: FavoritesScreenViewModel,
+    stateFavorite: Boolean,
+    onFavoriteChange: (Boolean) -> Unit
 ) {
 
     val rvState = rememberLazyGridState()
@@ -103,11 +125,16 @@ fun DetailsScreen(
     var showDialogPermission by remember { mutableStateOf(false) }
     var firstTime by remember { mutableStateOf(true) }
 
+    var result: GifsModel? = null
+    val resultSearchGifs by principalViewModel.resultSearchGifs.observeAsState(initial = null)
+    val resultSearchStickers by principalViewModel.resultSearchStickers.observeAsState(initial = null)
+    val showProgress by principalViewModel.showProgress.observeAsState(initial = false)
+
+
     val launcherShareGif =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 Toast.makeText(context, "Compartido OK", Toast.LENGTH_SHORT).show()
-                Log.i(TAG, "Compartido OK")
             }
             shareEnabled = true
         }
@@ -191,12 +218,61 @@ fun DetailsScreen(
                 Icon(
                     modifier = Modifier
                         .padding(end = 24.dp, start = 8.dp, top = 8.dp, bottom = 8.dp)
-                        .clickable { },
+                        .clickable {
+                            onFavoriteChange(stateFavorite)
+                            coroutineScope.launch(Dispatchers.IO) {
+                                if (!stateFavorite) {
+                                    favoriteViewModel.onAddFav(
+                                        FavModel(
+                                            url = url,
+                                            avatar_url = avatar,
+                                            display_name = displayName,
+                                            username = userName,
+                                            is_verified = verified,
+                                            type = typeResource,
+                                            id = id
+                                        )
+                                    )
+                                    withContext(Dispatchers.Main) {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Gif add to favorites",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
+                                } else {
+                                    val search = favoriteViewModel.onGetGifById(id)
+                                    favoriteViewModel.onDeleteFav(
+                                        FavModel(
+                                            id_int = search.first().id_int,
+                                            url = url,
+                                            avatar_url = avatar,
+                                            display_name = displayName,
+                                            username = userName,
+                                            is_verified = verified,
+                                            id = id,
+                                            type = typeResource
+                                        )
+                                    )
+                                    favoriteViewModel.onGetGifsFav()
+                                    withContext(Dispatchers.Main) {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "Gif delete to favorites",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
+                                }
+                            }
+                        },
                     tint = Color.Yellow,
-                    imageVector = Icons.Filled.Favorite,
+                    imageVector = if (stateFavorite) Icons.Filled.Favorite else Icons.TwoTone.Favorite,
                     contentDescription = "Favorite"
                 )
-
                 Icon(
                     modifier = Modifier
                         .padding(end = 24.dp, top = 8.dp, bottom = 8.dp)
@@ -229,7 +305,7 @@ fun DetailsScreen(
                             }
                         },
                     tint = Color.Yellow,
-                    imageVector = Icons.Filled.Share,
+                    imageVector = Icons.TwoTone.Share,
                     contentDescription = "Share"
                 )
                 Icon(
@@ -299,18 +375,20 @@ fun DetailsScreen(
                             }
                         },
                     tint = Color.Yellow,
-                    imageVector = Icons.Filled.Download,
+                    imageVector = Icons.TwoTone.Download,
                     contentDescription = "Download"
                 )
                 Icon(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 8.dp)
                         .clickable {
-                            detailsViewModel.copyToClipboard(context,url)
-                            Toast.makeText(context, "Url copiada",Toast.LENGTH_SHORT).show()
+                            detailsViewModel.copyToClipboard(context, url)
+                            Toast
+                                .makeText(context, "Url copiada", Toast.LENGTH_SHORT)
+                                .show()
                         },
                     tint = Color.Yellow,
-                    imageVector = Icons.Filled.CopyAll,
+                    imageVector = Icons.TwoTone.CopyAll,
                     contentDescription = "Copy"
                 )
             }
@@ -322,21 +400,35 @@ fun DetailsScreen(
                 Icon(
                     modifier = Modifier
                         .clickable {
-                            if (typeResource > 3)
-                                navController.navigate(
-                                    PrincipalScreen.createRoute(
-                                        typeResource - 4
-                                    )
-                                )
-                            else
-                                navController.navigate(
-                                    PrincipalScreen.createRoute(
-                                        typeResource
-                                    )
-                                )
+                            if (origin == Favorites.origin) {
+                                navController.navigate(Routes.FavoritesScreen.route)
+                            } else {
+                                when (typeResource) {
+                                    SearchEmojis.type, SearchGifs.type, SearchStickers.type -> {
+                                        navController.navigate(
+                                            PrincipalScreen.createRoute(
+                                                typeResource - 4
+                                            )
+                                        )
+                                    }
+
+                                    /*Types.Favorites.type -> {
+                                        navController.navigate(Routes.FavoritesScreen.route)
+                                    }*/
+
+                                    else -> {
+                                        navController.navigate(
+                                            PrincipalScreen.createRoute(
+                                                typeResource
+                                            )
+                                        )
+                                    }
+
+                                }
+                            }
                         },
                     tint = Color.Yellow,
-                    imageVector = Icons.Filled.Close,
+                    imageVector = Icons.TwoTone.Close,
                     contentDescription = "Close"
                 )
             }
@@ -411,9 +503,9 @@ fun DetailsScreen(
                 .weight(0.30f)
                 .fillMaxWidth()
         ) {
-            LazyHorizontalGridDetails(
-                navController = navController,
-                principalScreenViewModel = principalViewModel,
+            if (showProgress)
+                ProgressBarPrincipal()
+            LazyHorizontalGrid(
                 modifier = Modifier
                     .padding(
                         bottom = 8.dp,
@@ -421,15 +513,122 @@ fun DetailsScreen(
                         start = 8.dp,
                         end = 8.dp
                     ),
-                type = if (typeResource > 3) typeResource else typeResource + 4,
-                rvState = rvState,
-                search = userName
+                state = rvState,
+                rows = GridCells.Fixed(1),
+                content = {
+                    when (typeResource) {
+                        Types.Gifs.type,
+                        SearchGifs.type,
+                        SearchEmojis.type -> {
+                            coroutineScope.launch {
+                                if (firstTime)
+                                    principalViewModel.onShowProgress(true)
+                                principalViewModel.onGetSearchGifs(userName)
+                                favoriteViewModel.onGetGifsFav()
+                                principalViewModel.onShowProgress(false)
+                                firstTime = false
+                            }
+                            result = resultSearchGifs
+                        }
+
+                        Types.Stickers.type,
+                        SearchStickers.type -> {
+                            coroutineScope.launch {
+                                if (firstTime)
+                                    principalViewModel.onShowProgress(true)
+                                principalViewModel.onGetSearchStickers(userName)
+                                favoriteViewModel.onGetGifsFav()
+                                principalViewModel.onShowProgress(false)
+                                firstTime = false
+                            }
+                            result = resultSearchStickers
+                        }
+                    }
+
+                    result?.let {
+                        items(it.data) { item ->
+                            val positionImage =
+                                item.images.fixed_height.height.toInt() - item.images.fixed_height.width.toInt()
+                            val urlHorizontal =
+                                if (positionImage < 0) item.images.fixed_width.url else item.images.fixed_height.url
+                            Card(
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .padding(2.dp)
+                            ) {
+                                GifImage(
+                                    positionImage, urlHorizontal, modifier = Modifier
+                                        .aspectRatio(1f)
+                                        .background(
+                                            if (typeResource == SearchStickers.type) Color.DarkGray
+                                            else Color.Transparent
+                                        )
+                                        .clickable {
+                                            /*if (resultFavs?.any { fav ->
+                                                    url.contains(fav.url)
+                                                } == true) {
+                                                favoritesScreenViewModel.setIsFavorite(true)
+                                            } else {
+                                                favoritesScreenViewModel.setIsFavorite(false)
+                                            }*/
+                                            var isFavorite = false
+                                            coroutineScope.launch(Dispatchers.IO) {
+                                                val deferred = listOf(
+                                                    async {
+                                                        isFavorite =
+                                                            favoriteViewModel.checkIdIsFavorite(
+                                                                item.id
+                                                            )
+                                                    }
+                                                )
+                                                deferred.awaitAll()
+                                                withContext(Dispatchers.Main) {
+                                                    onFavoriteChange(!isFavorite)
+                                                    //Pasar este Item al bloque superior de la pantalla details
+                                                    if (item.user != null) {
+                                                        navController.navigate(
+                                                            Routes.DetailsScreen.createRoute(
+                                                                type = typeResource,
+                                                                url = urlHorizontal,
+                                                                origin = typeResource,
+                                                                avatar = item.user.avatar_url,
+                                                                displayName = item.user.display_name,
+                                                                userName = item.user.username,
+                                                                verified = item.user.is_verified,
+                                                                id = item.id,
+                                                                stateFavorite = stateFavorite
+                                                            )
+                                                        )
+                                                    } else {
+                                                        navController.navigate(
+                                                            Routes.DetailsScreen.createRoute(
+                                                                type = typeResource,
+                                                                url = urlHorizontal,
+                                                                origin = typeResource,
+                                                                avatar = "",
+                                                                displayName = "",
+                                                                userName = "",
+                                                                verified = false,
+                                                                id = item.id,
+                                                                stateFavorite = stateFavorite
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                )
+                            }
+                        }
+                    }
+                }
             )
         }
         Box(
             Modifier
                 .background(Color.Red)
-                .weight(0.10f)
+                .height(62.dp)
                 .fillMaxWidth()
         ) {
             Text(text = "")
@@ -446,6 +645,35 @@ fun GifImageGlide(
         model = url,
         contentDescription = null,
         contentScale = if (image == 0) ContentScale.Fit else ContentScale.Crop,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun GifImage(
+    positionImage: Int,
+    url: String,
+    modifier: Modifier
+) {
+    val context = LocalContext.current
+
+    val imageLoader = (ImageLoader.Builder(context)
+        .componentRegistry {
+            if (Build.VERSION.SDK_INT >= 28) {
+                add(ImageDecoderDecoder(context))
+            } else {
+                add(GifDecoder())
+            }
+        }
+            )
+        .build()
+    val painter = rememberImagePainter(url, imageLoader)
+    Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = if (positionImage == 0) ContentScale.Fit
+        else if (positionImage > 0) ContentScale.FillWidth
+        else ContentScale.FillHeight,
         modifier = modifier
     )
 }

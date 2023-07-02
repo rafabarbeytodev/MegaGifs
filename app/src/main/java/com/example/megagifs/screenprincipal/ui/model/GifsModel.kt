@@ -16,6 +16,7 @@ data class GifsModel(
 )
 
 data class GifItem(
+    @SerializedName("id") val id: String,
     @SerializedName("images") val images: GifImages,
     @SerializedName("user") val user: GifUser? = null
 )
@@ -36,5 +37,5 @@ data class GifImage(
     @SerializedName("height") val height: String = "",
     @SerializedName("width") val width: String = "",
     @SerializedName("size") val size: String = "",
-    @SerializedName("url") val url: String = "",
+    @SerializedName("url") val url: String = ""
 )

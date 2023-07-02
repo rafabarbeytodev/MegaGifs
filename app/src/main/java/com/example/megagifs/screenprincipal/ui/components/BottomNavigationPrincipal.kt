@@ -14,8 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.megagifs.core.Routes
-import com.example.megagifs.core.Types
+import com.example.megagifs.core.Routes.*
 import com.example.megagifs.core.Types.*
 
 /*****
@@ -53,7 +52,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     navController.navigate(
-                        Routes.PrincipalScreen.createRoute(
+                        PrincipalScreen.createRoute(
                             Gifs.type
                         )
                     )
@@ -72,7 +71,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     navController.navigate(
-                        Routes.PrincipalScreen.createRoute(
+                        PrincipalScreen.createRoute(
                             Emojis.type
                         )
                     )
@@ -92,7 +91,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     navController.navigate(
-                        Routes.PrincipalScreen.createRoute(
+                        PrincipalScreen.createRoute(
                             Stickers.type
                         )
                     )
@@ -110,7 +109,7 @@ fun BottomNavigationPrincipal(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.Gray,
                 onClick = {
-
+                    navController.navigate(FavoritesScreen.route)
                 }
             )
         }

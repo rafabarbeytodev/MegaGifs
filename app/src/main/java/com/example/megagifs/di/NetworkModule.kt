@@ -1,6 +1,5 @@
 package com.example.megagifs.di
 
-import com.example.megagifs.screendetails.data.network.GifUniqueClient
 import com.example.megagifs.screenprincipal.data.network.GifsClient
 import dagger.Module
 import dagger.Provides
@@ -30,12 +29,6 @@ class NetworkModule {
             .baseUrl("https://api.giphy.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideGifUniqueClient(retrofit: Retrofit): GifUniqueClient {
-        return retrofit.create(GifUniqueClient::class.java)
     }
 
     @Singleton

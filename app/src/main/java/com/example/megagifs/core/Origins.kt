@@ -9,14 +9,10 @@ package com.example.megagifs.core
  *
  * All rights reserved 2023.
  *****/
-sealed class Types(val type: Int) {
+sealed class Origins(val origin: Int) {
 
-    object Gifs : Types(0)
-    object Emojis : Types(1)
-    object Stickers : Types(2)
-    //object Favorites : Types(3)
-    object SearchGifs : Types(4)
-    object SearchEmojis : Types(5)
-    object SearchStickers : Types(6)
-
+    object Gifs : Origins(0)
+    object Emojis : Origins(1)
+    object Stickers : Origins(2)
+    object Favorites : Origins(3)
 }

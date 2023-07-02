@@ -15,16 +15,20 @@ sealed class Routes(val route: String) {
     }
 
     object DetailsScreen :
-        Routes("detailsScreen?type={type}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}") {
+        Routes("detailsScreen?type={type}&origin={origin}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
         fun createRoute(
             type: Int,
+            origin:Int,
             url: String,
             avatar: String,
             displayName: String,
             userName: String,
-            verified:Boolean
+            verified: Boolean,
+            id:String,
+            stateFavorite:Boolean
         ) =
-            "detailsScreen?type=$type&url=$url&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified"
+            "detailsScreen?type=$type&origin=$origin&url=$url&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified&id=$id&stateFavorite=$stateFavorite"
     }
+    object FavoritesScreen : Routes("favoritesScreen")
 
 }

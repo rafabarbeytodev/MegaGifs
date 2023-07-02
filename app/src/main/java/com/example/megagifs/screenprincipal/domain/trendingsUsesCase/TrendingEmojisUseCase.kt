@@ -1,8 +1,6 @@
 package com.example.megagifs.screenprincipal.domain.trendingsUsesCase
 
 import com.example.megagifs.screenprincipal.data.network.GifsRepository
-import com.example.megagifs.screenprincipal.data.network.entity.GifsEntity
-import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import javax.inject.Inject
 
 /*****
@@ -17,5 +15,5 @@ import javax.inject.Inject
 class TrendingEmojisUseCase @Inject constructor(
     private val repository: GifsRepository
 ) {
-    suspend operator fun invoke(): GifsModel? = repository.getTrendingEmojis()
+    suspend operator fun invoke() = repository.getTrendingEmojis()
 }

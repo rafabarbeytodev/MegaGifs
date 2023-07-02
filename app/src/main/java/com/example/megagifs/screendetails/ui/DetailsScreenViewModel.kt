@@ -9,11 +9,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.megagifs.screendetails.data.network.entity.GifUniqueItem
-import com.example.megagifs.screendetails.domain.SearchGifUniqueUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,15 +32,7 @@ import javax.inject.Inject
  *****/
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(
-    private val searchingGifUseCase: SearchGifUniqueUseCase
-) : ViewModel() {
-
-    private val _resultGif = MutableLiveData<GifUniqueItem>()
-    val resultGif: LiveData<GifUniqueItem> = _resultGif
-
-    suspend fun onGetSearchGif(id: String) {
-        _resultGif.value = searchingGifUseCase(id)?.data
-    }
+    ) : ViewModel() {
 
     fun getGifBytesFromUrl(url: String): ByteArray? {
         val client = OkHttpClient()

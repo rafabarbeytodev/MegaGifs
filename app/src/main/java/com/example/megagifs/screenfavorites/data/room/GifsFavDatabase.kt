@@ -1,4 +1,4 @@
-package com.example.megagifs.data
+package com.example.megagifs.screenfavorites.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase
  *
  * All rights reserved 2023.
  *****/
-@Database(entities = [GifEntity::class], version = 1)
-abstract class GifsDatabase: RoomDatabase() {
-    abstract fun gifDao():GifDao
+@Database(entities = [GifsFavEntity::class], version = 2)
+abstract class GifsFavDatabase: RoomDatabase() {
+    abstract fun gifFavDao(): GifsFavDao
 }

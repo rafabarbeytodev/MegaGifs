@@ -2,8 +2,8 @@ package com.example.megagifs.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.megagifs.data.GifDao
-import com.example.megagifs.data.GifsDatabase
+import com.example.megagifs.screenfavorites.data.room.GifsFavDao
+import com.example.megagifs.screenfavorites.data.room.GifsFavDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,13 +25,18 @@ import javax.inject.Singleton
 class DatabaseModule {
 
     @Provides
-    fun provideGifDao(gifDatabase: GifsDatabase): GifDao{
-        return gifDatabase.gifDao()
+    fun provideGifDao(gifDatabase: GifsFavDatabase): GifsFavDao {
+        return gifDatabase.gifFavDao()
     }
 
     @Provides
     @Singleton
-    fun provideGifDatabase(@ApplicationContext appContext: Context): GifsDatabase{
-        return Room.databaseBuilder(appContext,GifsDatabase::class.java,"Gifs").build()
+    fun provideGifDatabase(@ApplicationContext appContext: Context): GifsFavDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            GifsFavDatabase::class.java,
+            "GifsFav")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

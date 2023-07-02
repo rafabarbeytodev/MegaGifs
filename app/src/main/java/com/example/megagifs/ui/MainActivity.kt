@@ -8,6 +8,10 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,6 +20,8 @@ import com.example.megagifs.screenprincipal.ui.PrincipalScreen
 import com.example.megagifs.core.Routes.*
 import com.example.megagifs.screendetails.ui.DetailsScreen
 import com.example.megagifs.screendetails.ui.DetailsScreenViewModel
+import com.example.megagifs.screenfavorites.ui.FavoritesScreen
+import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import com.example.megagifs.ui.theme.MegaGifsTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
     private val principalViewModel: PrincipalScreenViewModel by viewModels()
     private val detailsViewModel: DetailsScreenViewModel by viewModels()
+    private val favoriteViewModel: FavoritesScreenViewModel by viewModels()
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -36,13 +43,15 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
+
+                    var stateFavorite by remember { mutableStateOf(false) }
+
                     //Gestion de la navegación
                     val navigationController = rememberNavController()
                     NavHost(
                         navController = navigationController,
                         startDestination = PrincipalScreen.route
                     ) {
-
                         composable(
                             PrincipalScreen.route,
                             arguments = listOf(navArgument("type") { defaultValue = 0 },
@@ -53,8 +62,11 @@ class MainActivity : ComponentActivity() {
                                     PrincipalScreen(
                                         navigationController,
                                         it.getInt("type"),
-                                        search, principalViewModel
-                                    )
+                                        search, principalViewModel, favoriteViewModel,
+                                        stateFavorite
+                                    ) { state ->
+                                        stateFavorite = !state
+                                    }
                                 }
                             }
                         }
@@ -68,6 +80,9 @@ class MainActivity : ComponentActivity() {
                                 navArgument("type") {
                                     defaultValue = 0
                                 },
+                                navArgument("origin") {
+                                    defaultValue = 0
+                                },
                                 navArgument("avatar") {
                                     defaultValue = ""
                                 },
@@ -79,6 +94,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 navArgument("verified") {
                                     defaultValue = false
+                                },
+                                navArgument("id") {
+                                    defaultValue = ""
                                 }
                             )
                         ) { backStackEntry ->
@@ -87,15 +105,30 @@ class MainActivity : ComponentActivity() {
                                     DetailsScreen(
                                         navigationController,
                                         it.getInt("type"),
+                                        it.getInt("origin"),
                                         url,
                                         it.getString("avatar")!!,
                                         it.getString("displayName")!!,
                                         it.getString("userName")!!,
                                         it.getBoolean("verified"),
+                                        it.getString("id")!!,
                                         principalViewModel,
-                                        detailsViewModel
-                                    )
+                                        detailsViewModel,
+                                        favoriteViewModel,
+                                        stateFavorite
+                                    ) { state ->
+                                        stateFavorite = !state
+                                    }
                                 }
+                            }
+                        }
+                        composable(FavoritesScreen.route) {
+                            FavoritesScreen(
+                                navigationController,
+                                favoriteViewModel,
+                                stateFavorite
+                            ) { state ->
+                                stateFavorite = !state
                             }
                         }
                     }

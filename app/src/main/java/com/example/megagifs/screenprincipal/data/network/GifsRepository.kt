@@ -51,6 +51,7 @@ class GifsRepository @Inject constructor(
     }
     private fun GifItem.mapToGifItem(): com.example.megagifs.screenprincipal.ui.model.GifItem {
         return com.example.megagifs.screenprincipal.ui.model.GifItem(
+            id = id,
             images = images.mapToGifImages(),
             user = user?.mapToGifUser()
         )
