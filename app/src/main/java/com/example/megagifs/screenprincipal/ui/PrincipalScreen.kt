@@ -1,9 +1,9 @@
 package com.example.megagifs.screenprincipal.ui
 
-import android.os.Build
-import androidx.compose.foundation.Image
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,15 +32,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
-import coil.ImageLoader
-import coil.compose.rememberImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import com.example.megagifs.core.Routes
 import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
@@ -49,7 +45,9 @@ import com.example.megagifs.screenprincipal.ui.components.DrawerPrincipal
 import com.example.megagifs.screenprincipal.ui.components.FabPrincipal
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
 import com.example.megagifs.screenprincipal.ui.components.SearchBarPrincipal
+import com.example.megagifs.screenprincipal.ui.components.clearCache
 import com.example.megagifs.screenprincipal.ui.model.GifsModel
+import com.example.megagifs.ui.components.GifImageGlide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -80,6 +78,7 @@ fun PrincipalScreen(
 
     val rvState = rememberLazyGridState()
 
+    val context = LocalContext.current
 
     var firstTime by rememberSaveable {
         mutableStateOf(true)
@@ -95,6 +94,42 @@ fun PrincipalScreen(
 
     Column {
         Scaffold(
+            modifier = Modifier
+                .weight(1f)
+                .pointerInput(Unit) {
+                    detectHorizontalDragGestures { change, dragAmount ->
+                        if (dragAmount > 0) {
+                            // Swiping from left to right
+                            when (type) {
+                                Gifs.type -> {
+                                    goToPrincipal(Emojis.type , context, navController)
+                                }
+
+                                Emojis.type -> {
+                                    goToPrincipal(Stickers.type, context, navController)
+                                }
+
+                                Stickers.type -> {
+                                    goToFavourites(Favorites.type, context, navController)
+                                }
+                            }
+                        } else if (dragAmount < 0) {
+                            // Swiping from right to left
+                            if (type > 0) { //If the Screen is Gifs, no move
+                                when (type) {
+                                    Emojis.type -> {
+                                        goToPrincipal(Gifs.type, context, navController)
+                                    }
+
+                                    Stickers.type -> {
+                                        goToPrincipal(Emojis.type, context, navController)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+            drawerGesturesEnabled = false,
             scaffoldState = scaffoldState,
             topBar = {
                 if (type != Emojis.type)
@@ -119,7 +154,9 @@ fun PrincipalScreen(
                                 end = 8.dp
                             ),
                         state = rvState,
-                        columns = if (type != Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(4)
+                        columns = if (type != Emojis.type) GridCells.Fixed(2) else GridCells.Adaptive(
+                            100.dp
+                        )
                     ) {
                         when (type) {
                             Gifs.type -> {
@@ -192,74 +229,67 @@ fun PrincipalScreen(
                             items(it.data) { item ->
                                 val positionImage =
                                     item.images.fixed_height.height.toInt() - item.images.fixed_height.width.toInt()
-                                val url =
-                                    if (positionImage < 0) item.images.fixed_width.url else item.images.fixed_height.url
+
+                                val url: String = if (positionImage < 0) {
+                                    item.images.fixed_width.url
+                                } else {
+                                    item.images.fixed_height.url
+                                }
                                 Card(
                                     elevation = 8.dp,
                                     shape = RoundedCornerShape(8.dp),
                                     modifier = Modifier
                                         .padding(2.dp)
                                 ) {
-                                    GifImage(positionImage, url, modifier = Modifier
-                                        .aspectRatio(1f)
-                                        .background(
-                                            if (type == Stickers.type || type == SearchStickers.type) Color.DarkGray
-                                            else Color.Transparent
-                                        )
-                                        .clickable {
-                                            var isFavorite = false
-                                            coroutineScope.launch(Dispatchers.IO) {
-                                                val deferred = listOf(
-                                                    async {
-                                                        isFavorite =
-                                                            favoritesScreenViewModel.checkIdIsFavorite(
-                                                                item.id
-                                                            )
-                                                    }
-                                                )
-                                                deferred.awaitAll()
-                                                withContext(Dispatchers.Main) {
-                                                    onFavoriteChange(!isFavorite)
-                                                    if (item.user != null) {
+                                    GifImageGlide(
+                                        positionImage = positionImage,
+                                        url = url,
+                                        modifier = Modifier
+                                            .aspectRatio(1f)
+                                            .background(
+                                                if (type == Stickers.type || type == SearchStickers.type) Color.DarkGray
+                                                else Color.Transparent
+                                            )
+                                            .clickable {
+                                                var isFavorite = false
+                                                coroutineScope.launch(Dispatchers.IO) {
+                                                    val deferred = listOf(
+                                                        async {
+                                                            isFavorite =
+                                                                favoritesScreenViewModel.checkIdIsFavorite(
+                                                                    item.id
+                                                                )
+                                                        }
+                                                    )
+                                                    deferred.awaitAll()
+                                                    withContext(Dispatchers.Main) {
+                                                        onFavoriteChange(!isFavorite)
                                                         navController.navigate(
                                                             Routes.DetailsScreen.createRoute(
                                                                 type = type,
                                                                 url = url,
                                                                 origin = type,
-                                                                avatar = item.user.avatar_url,
-                                                                displayName = item.user.display_name,
-                                                                userName = item.user.username,
-                                                                verified = item.user.is_verified,
-                                                                id = item.id,
-                                                                stateFavorite = stateFavorite
-                                                            )
-                                                        )
-                                                    } else {
-                                                        navController.navigate(
-                                                            Routes.DetailsScreen.createRoute(
-                                                                type = type,
-                                                                url = url,
-                                                                origin = type,
-                                                                avatar = "",
-                                                                displayName = "",
-                                                                userName = "",
-                                                                verified = false,
+                                                                avatar = item.user?.avatar_url.orEmpty(),
+                                                                displayName = item.user?.display_name.orEmpty(),
+                                                                userName = item.user?.username.orEmpty(),
+                                                                verified = item.user?.is_verified
+                                                                    ?: false,
                                                                 id = item.id,
                                                                 stateFavorite = stateFavorite
                                                             )
                                                         )
                                                     }
                                                 }
-                                            }
-                                        }
-                                    )
+                                            })
                                 }
                             }
                         }
                     }
                 }
             },
-            bottomBar = { BottomNavigationPrincipal(navController, type) },
+            bottomBar = {
+                BottomNavigationPrincipal(navController, type)
+            },
             //Drawer
             drawerBackgroundColor = Color.DarkGray,
             drawerContent = {
@@ -269,7 +299,6 @@ fun PrincipalScreen(
                     }
                 }
             },
-            drawerGesturesEnabled = true,
             //FAB
             floatingActionButton = {
                 val showButton by remember {
@@ -279,7 +308,6 @@ fun PrincipalScreen(
                 }
                 if (showButton) FabPrincipal(rvState)
             },
-            modifier = Modifier.weight(1f),
             backgroundColor = Color.Black
         )
         Spacer(
@@ -300,32 +328,22 @@ fun PrincipalScreen(
     }
 }
 
-@Composable
-fun GifImage(
-    positionImage: Int,
-    url: String,
-    modifier: Modifier
-) {
-    val context = LocalContext.current
-
-    val imageLoader = (ImageLoader.Builder(context)
-        .componentRegistry {
-            if (Build.VERSION.SDK_INT >= 28) {
-                add(ImageDecoderDecoder(context))
-            } else {
-                add(GifDecoder())
-            }
-        }
-            )
-        .build()
-    val painter = rememberImagePainter(url, imageLoader)
-    Image(
-        painter = painter,
-        contentDescription = null,
-        contentScale = if (positionImage == 0) ContentScale.Fit
-        else if (positionImage > 0) ContentScale.FillWidth
-        else ContentScale.FillHeight,
-        modifier = modifier
+fun goToPrincipal(type: Int, context: Context, navController: NavHostController) {
+    clearCache(context = context)
+    navController.navigate(
+        Routes.PrincipalScreen.createRoute(
+            type
+        )
     )
 }
+
+fun goToFavourites(type: Int, context: Context, navController: NavHostController) {
+    clearCache(context = context)
+    navController.navigate(
+        Routes.FavoritesScreen.createRoute(
+            type
+        )
+    )
+}
+
 

@@ -11,5 +11,5 @@ package com.example.megagifs.core
  *****/
 
 const val TAG = "DEVELOPRAFA"
-
-const val API_KEY = "ZCwXdskKJKjq3cMU3Yihc73t5eQNnsHk"
+const val API_KEY_GIPHY = "ZCwXdskKJKjq3cMU3Yihc73t5eQNnsHk"
+const val URL_PLAY_STORE = "https://play.google.com/store/apps/details?id=com.rafabarbeytodev.android.kotlin.sms2mailphone&hl=en-US&ah=bK3d9OnUMn2MHFeFH8HUwwO1oPI"

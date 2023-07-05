@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MegaGifs</string>
+    <string name="text_alert_deprecated_version">La versión de la aplicación instalada en su terminal esta obsoleta, y es necesario que se actualice para poder usarla. Por favor, acceda a la PlayStore para su actualización.</string>
+    <string name="text_title_alert_deprecated_version">Nueva versión disponible</string>
+    <string name="text_btn_update_alert_deprecated_version">Actualizar</string>
+    <string name="text_title_btn_exit_alert_deprecated_version">Salir de la App</string>
 </resources>

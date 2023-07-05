@@ -59,11 +59,10 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
                     painter = painterResource(id = R.drawable.airealogo),
                     contentDescription = "Airea",
                     modifier = Modifier
-                        .size(110.dp)
                         .padding(12.dp)
                 )
                 Text(
-                    text = "Aire developments",
+                    text = "Airea developments",
                     color = Color.White,
                     fontSize = 18.sp
                 )

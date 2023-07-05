@@ -14,9 +14,9 @@ sealed class Types(val type: Int) {
     object Gifs : Types(0)
     object Emojis : Types(1)
     object Stickers : Types(2)
-    //object Favorites : Types(3)
+    object Favorites : Types(3)
     object SearchGifs : Types(4)
-    object SearchEmojis : Types(5)
+    //object SearchEmojis : Types(5)
     object SearchStickers : Types(6)
 
 }

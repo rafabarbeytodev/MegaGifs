@@ -1,5 +1,7 @@
 package com.example.megagifs.screenprincipal.ui.components
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.filled.GifBox
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.megagifs.core.Routes.*
@@ -33,6 +36,8 @@ fun BottomNavigationPrincipal(
     type: Int
 ) {
 
+    val context = LocalContext.current
+
     Column {
         BottomNavigation(
             elevation = 24.dp,
@@ -51,6 +56,7 @@ fun BottomNavigationPrincipal(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.Gray,
                 onClick = {
+                    clearCache(context = context)
                     navController.navigate(
                         PrincipalScreen.createRoute(
                             Gifs.type
@@ -70,6 +76,7 @@ fun BottomNavigationPrincipal(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.Gray,
                 onClick = {
+                    clearCache(context = context)
                     navController.navigate(
                         PrincipalScreen.createRoute(
                             Emojis.type
@@ -90,6 +97,7 @@ fun BottomNavigationPrincipal(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.Gray,
                 onClick = {
+                    clearCache(context = context)
                     navController.navigate(
                         PrincipalScreen.createRoute(
                             Stickers.type
@@ -109,9 +117,24 @@ fun BottomNavigationPrincipal(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.Gray,
                 onClick = {
-                    navController.navigate(FavoritesScreen.route)
+                    clearCache(context = context)
+                    navController.navigate(FavoritesScreen.createRoute(Favorites.type))
                 }
             )
         }
+    }
+}
+
+fun clearCache(context: Context) {
+    try {
+        val cacheDir = context.cacheDir
+        val files = cacheDir.listFiles()
+        if (files != null) {
+            for (file in files) {
+                file.delete()
+            }
+        }
+    } catch (e: Exception) {
+        Log.i("DEVELOPRAFA", e.message.toString())
     }
 }

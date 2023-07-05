@@ -1,5 +1,6 @@
 package com.example.megagifs.screenprincipal.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -23,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.megagifs.core.Routes
-import com.example.megagifs.core.Types
 import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import kotlinx.coroutines.launch
@@ -81,11 +81,6 @@ fun SearchBarPrincipal(
                                 )
                             }
                         }
-
-                        Emojis.type, SearchEmojis.type -> {
-
-                        }
-
                         Stickers.type, SearchStickers.type -> {
                             coroutineScope.launch {
                                 principalScreenViewModel.onGetSearchStickers(query)
@@ -115,5 +110,7 @@ fun SearchBarPrincipal(
             active = true
         }, active = active,
         onActiveChange = { active = it }) {
+        AnimatedVisibility(visible = true) {
+        }
     }
 }

@@ -11,6 +11,9 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +43,7 @@ import androidx.compose.material.icons.twotone.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -48,8 +52,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -59,12 +63,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
-import coil.ImageLoader
-import coil.compose.rememberImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.example.megagifs.R
 import com.example.megagifs.core.Origins.*
 import com.example.megagifs.core.Origins.Favorites
@@ -78,6 +76,7 @@ import com.example.megagifs.screenfavorites.ui.model.FavModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
 import com.example.megagifs.screenprincipal.ui.model.GifsModel
+import com.example.megagifs.ui.components.GifImageGlide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -378,7 +377,9 @@ fun DetailsScreen(
                     imageVector = Icons.TwoTone.Download,
                     contentDescription = "Download"
                 )
-                Icon(
+
+                AnimatedIcon()
+                /*Icon(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 8.dp)
                         .clickable {
@@ -390,7 +391,7 @@ fun DetailsScreen(
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.CopyAll,
                     contentDescription = "Copy"
-                )
+                )*/
             }
             Box(
                 Modifier
@@ -404,7 +405,8 @@ fun DetailsScreen(
                                 navController.navigate(Routes.FavoritesScreen.route)
                             } else {
                                 when (typeResource) {
-                                    SearchEmojis.type, SearchGifs.type, SearchStickers.type -> {
+                                    SearchGifs.type,
+                                    SearchStickers.type -> {
                                         navController.navigate(
                                             PrincipalScreen.createRoute(
                                                 typeResource - 4
@@ -434,12 +436,13 @@ fun DetailsScreen(
             }
         }
         GifImageGlide(
+            1,
             url,
             modifier = Modifier
                 .fillMaxSize(1f)
                 .align(Alignment.CenterHorizontally)
                 .background(Color.Transparent)
-                .weight(0.35f), 1
+                .weight(0.35f)
         )
         Row(
             modifier = Modifier
@@ -449,11 +452,12 @@ fun DetailsScreen(
         ) {
 
             GifImageGlide(
+                0,
                 avatar,
                 modifier = Modifier
                     .background(Color.Transparent)
                     .padding(16.dp)
-                    .weight(0.20f), 0
+                    .weight(0.20f)
             )
             Column(
                 Modifier
@@ -518,8 +522,7 @@ fun DetailsScreen(
                 content = {
                     when (typeResource) {
                         Types.Gifs.type,
-                        SearchGifs.type,
-                        SearchEmojis.type -> {
+                        SearchGifs.type -> {
                             coroutineScope.launch {
                                 if (firstTime)
                                     principalViewModel.onShowProgress(true)
@@ -557,21 +560,16 @@ fun DetailsScreen(
                                 modifier = Modifier
                                     .padding(2.dp)
                             ) {
-                                GifImage(
-                                    positionImage, urlHorizontal, modifier = Modifier
+                                GifImageGlide(
+                                    positionImage,
+                                    urlHorizontal,
+                                    modifier = Modifier
                                         .aspectRatio(1f)
                                         .background(
                                             if (typeResource == SearchStickers.type) Color.DarkGray
                                             else Color.Transparent
                                         )
                                         .clickable {
-                                            /*if (resultFavs?.any { fav ->
-                                                    url.contains(fav.url)
-                                                } == true) {
-                                                favoritesScreenViewModel.setIsFavorite(true)
-                                            } else {
-                                                favoritesScreenViewModel.setIsFavorite(false)
-                                            }*/
                                             var isFavorite = false
                                             coroutineScope.launch(Dispatchers.IO) {
                                                 val deferred = listOf(
@@ -585,6 +583,7 @@ fun DetailsScreen(
                                                 deferred.awaitAll()
                                                 withContext(Dispatchers.Main) {
                                                     onFavoriteChange(!isFavorite)
+                                                    navController.popBackStack()
                                                     //Pasar este Item al bloque superior de la pantalla details
                                                     if (item.user != null) {
                                                         navController.navigate(
@@ -635,47 +634,37 @@ fun DetailsScreen(
         }
     }
 }
-
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun GifImageGlide(
-    url: String, modifier: Modifier, image: Int
-) {
-    GlideImage(
-        model = url,
-        contentDescription = null,
-        contentScale = if (image == 0) ContentScale.Fit else ContentScale.Crop,
-        modifier = modifier
-    )
-}
+fun AnimatedIcon() {
 
-@Composable
-fun GifImage(
-    positionImage: Int,
-    url: String,
-    modifier: Modifier
-) {
-    val context = LocalContext.current
+    var scale by remember { mutableStateOf(1f) }
+    val scaleAnim = remember { Animatable(1f) }
 
-    val imageLoader = (ImageLoader.Builder(context)
-        .componentRegistry {
-            if (Build.VERSION.SDK_INT >= 28) {
-                add(ImageDecoderDecoder(context))
-            } else {
-                add(GifDecoder())
+    LaunchedEffect(scale) {
+        scaleAnim.animateTo(
+            targetValue = scale,
+            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .scale(scaleAnim.value)
+            .clickable {
+                scale = if (scale == 1f) 1.5f else 1f
             }
-        }
-            )
-        .build()
-    val painter = rememberImagePainter(url, imageLoader)
-    Image(
-        painter = painter,
-        contentDescription = null,
-        contentScale = if (positionImage == 0) ContentScale.Fit
-        else if (positionImage > 0) ContentScale.FillWidth
-        else ContentScale.FillHeight,
-        modifier = modifier
-    )
+    ) {
+        Icon(
+            modifier = Modifier
+                .padding(top = 8.dp, bottom = 8.dp)
+                .clickable {
+
+                },
+            tint = Color.Yellow,
+            imageVector = Icons.TwoTone.CopyAll,
+            contentDescription = "Copy"
+        )
+    }
 }
 
 
