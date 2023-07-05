@@ -1,5 +1,13 @@
 package com.example.megagifs.screensplash.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope.SlideDirection.Companion.Down
+import androidx.compose.animation.AnimatedContentScope.SlideDirection.Companion.Up
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,16 +34,32 @@ import kotlinx.coroutines.delay
  *
  * All rights reserved 2023.
  *****/
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SplashScreen(navController: NavHostController) {
 
-    LaunchedEffect(key1 = true ){
+    LaunchedEffect(key1 = true) {
         delay(2000)
         navController.popBackStack()
         navController.navigate(Routes.PrincipalScreen.route)
     }
-
-    Splash()
+    AnimatedContent(
+        targetState = true,
+        transitionSpec = {
+            slideIntoContainer(
+                animationSpec = tween(300, easing = EaseIn),
+                towards = Up
+            ).with(
+                slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = Down
+                )
+            )
+        },
+    )
+    {
+        Splash()
+    }
 }
 
 @Composable
@@ -43,11 +67,14 @@ fun Splash() {
 
     Column(
         modifier = Modifier.fillMaxSize(),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center) {
-        Image(painter = painterResource(id = R.drawable.megagifs),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.megagifs),
             contentDescription = "logo",
-        modifier = Modifier.size(350.dp,350.dp))
+            modifier = Modifier.size(350.dp, 350.dp)
+        )
     }
 
 }

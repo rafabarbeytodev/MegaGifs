@@ -20,11 +20,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -74,6 +74,7 @@ import com.example.megagifs.screendetails.ui.components.DialogPermission
 import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
 import com.example.megagifs.screenfavorites.ui.model.FavModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.example.megagifs.screenprincipal.ui.components.BannerAdView
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
 import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import com.example.megagifs.ui.components.GifImageGlide
@@ -585,35 +586,20 @@ fun DetailsScreen(
                                                     onFavoriteChange(!isFavorite)
                                                     navController.popBackStack()
                                                     //Pasar este Item al bloque superior de la pantalla details
-                                                    if (item.user != null) {
-                                                        navController.navigate(
-                                                            Routes.DetailsScreen.createRoute(
-                                                                type = typeResource,
-                                                                url = urlHorizontal,
-                                                                origin = typeResource,
-                                                                avatar = item.user.avatar_url,
-                                                                displayName = item.user.display_name,
-                                                                userName = item.user.username,
-                                                                verified = item.user.is_verified,
-                                                                id = item.id,
-                                                                stateFavorite = stateFavorite
-                                                            )
+                                                    navController.navigate(
+                                                        Routes.DetailsScreen.createRoute(
+                                                            type = typeResource,
+                                                            url = urlHorizontal,
+                                                            origin = typeResource,
+                                                            avatar = item.user?.avatar_url.orEmpty(),
+                                                            displayName = item.user?.display_name.orEmpty(),
+                                                            userName = item.user?.username.orEmpty(),
+                                                            verified = item.user?.is_verified
+                                                                ?: false,
+                                                            id = item.id,
+                                                            stateFavorite = stateFavorite
                                                         )
-                                                    } else {
-                                                        navController.navigate(
-                                                            Routes.DetailsScreen.createRoute(
-                                                                type = typeResource,
-                                                                url = urlHorizontal,
-                                                                origin = typeResource,
-                                                                avatar = "",
-                                                                displayName = "",
-                                                                userName = "",
-                                                                verified = false,
-                                                                id = item.id,
-                                                                stateFavorite = stateFavorite
-                                                            )
-                                                        )
-                                                    }
+                                                    )
                                                 }
                                             }
                                         }
@@ -624,16 +610,22 @@ fun DetailsScreen(
                 }
             )
         }
-        Box(
-            Modifier
-                .background(Color.Red)
-                .height(62.dp)
+        Spacer(
+            modifier = Modifier
+                .background(Color.Black)
                 .fillMaxWidth()
+        )
+        Box(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .fillMaxWidth(1f),
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = "")
+            BannerAdView()
         }
     }
 }
+
 @Composable
 fun AnimatedIcon() {
 

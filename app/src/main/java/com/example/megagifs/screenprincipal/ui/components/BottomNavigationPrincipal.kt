@@ -17,8 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.megagifs.core.Routes.*
 import com.example.megagifs.core.Types.*
+import com.example.megagifs.screenprincipal.ui.goToFavourites
+import com.example.megagifs.screenprincipal.ui.goToPrincipal
 
 /*****
  * Proyect: MegaGifs
@@ -57,11 +58,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     clearCache(context = context)
-                    navController.navigate(
-                        PrincipalScreen.createRoute(
-                            Gifs.type
-                        )
-                    )
+                    goToPrincipal(Gifs.type, context, navController)
                 }
             )
             BottomNavigationItem(
@@ -77,11 +74,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     clearCache(context = context)
-                    navController.navigate(
-                        PrincipalScreen.createRoute(
-                            Emojis.type
-                        )
-                    )
+                    goToPrincipal(Emojis.type, context, navController)
                 }
             )
             BottomNavigationItem(
@@ -98,11 +91,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     clearCache(context = context)
-                    navController.navigate(
-                        PrincipalScreen.createRoute(
-                            Stickers.type
-                        )
-                    )
+                    goToPrincipal(Stickers.type, context, navController)
                 }
             )
             BottomNavigationItem(
@@ -118,7 +107,7 @@ fun BottomNavigationPrincipal(
                 unselectedContentColor = Color.Gray,
                 onClick = {
                     clearCache(context = context)
-                    navController.navigate(FavoritesScreen.createRoute(Favorites.type))
+                    goToFavourites(Favorites.type, context, navController)
                 }
             )
         }

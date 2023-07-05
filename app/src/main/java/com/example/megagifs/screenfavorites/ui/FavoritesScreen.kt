@@ -28,7 +28,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.twotone.FavoriteBorder
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -54,6 +53,7 @@ import com.example.megagifs.core.Origins
 import com.example.megagifs.core.Routes
 import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenfavorites.ui.model.FavModel
+import com.example.megagifs.screenprincipal.ui.components.BannerAdView
 import com.example.megagifs.screenprincipal.ui.components.BottomNavigationPrincipal
 import com.example.megagifs.screenprincipal.ui.components.FabPrincipal
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
@@ -102,25 +102,25 @@ fun FavoritesScreen(
             modifier = Modifier
                 .weight(1f)
                 .pointerInput(Unit) {
-                detectHorizontalDragGestures { _, dragAmount ->
-                    if (dragAmount > 0) {
-                        // Swiping from left to right
-                        // Is the last Screen to Right, no move
-                    } else if (dragAmount < 0) {
-                        // Swiping from right to left
-                        //Go to principal/Stickers
-                        clearCache(context = context)
-                        navController.navigate(
-                            Routes.PrincipalScreen.createRoute(
-                                Stickers.type
+                    detectHorizontalDragGestures { _, dragAmount ->
+                        if (dragAmount > 0) {
+                            // Swiping from left to right
+                            // Is the last Screen to Right, no move
+                        } else if (dragAmount < 0) {
+                            // Swiping from right to left
+                            //Go to principal/Stickers
+                            clearCache(context = context)
+                            navController.navigate(
+                                Routes.PrincipalScreen.createRoute(
+                                    Stickers.type
+                                )
                             )
-                        )
+                        }
                     }
-                }
-            },
+                },
             backgroundColor = Color.Black,
             scaffoldState = scaffoldState,
-            topBar = {
+            /*topBar = {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Icon(
                         imageVector = Icons.Filled.Close,
@@ -131,11 +131,11 @@ fun FavoritesScreen(
                             .align(Alignment.CenterEnd)
                             .clickable {
                                 navController.popBackStack()
-                                goToPrincipal(Gifs.type,context,navController)
+                                goToPrincipal(Gifs.type, context, navController)
                             }
                     )
                 }
-            },
+            },*/
             content = {
                 Column {
                     if (showProgress)
@@ -247,12 +247,12 @@ fun FavoritesScreen(
         )
         Box(
             modifier = Modifier
-                .background(Color.Red)
+                .background(Color.LightGray)
                 .fillMaxWidth(1f)
                 .height(62.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "")
+            BannerAdView()
         }
     }
 }

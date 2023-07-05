@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-android'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -86,13 +87,17 @@ dependencies {
 
     implementation "androidx.room:room-ktx:2.5.2"
     implementation "androidx.room:room-runtime:2.5.2"
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.7'
     kapt 'androidx.room:room-compiler:2.5.2'
 
     implementation "com.google.dagger:hilt-android:2.46"
     implementation 'com.google.android.gms:play-services-drive:17.0.0'
+    //Admon
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
     kapt "com.google.dagger:hilt-android-compiler:2.46"
 
     implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

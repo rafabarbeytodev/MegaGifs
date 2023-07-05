@@ -20,7 +20,10 @@ import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
 import com.example.megagifs.ui.components.ShowNewVersion
 import com.example.megagifs.ui.theme.MegaGifsTheme
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Collections
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -33,6 +36,12 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        MobileAds.initialize(this)
+        val configuration = RequestConfiguration.Builder()
+            .setTestDeviceIds(Collections.singletonList("DEVICE ID"))
+            .build()
+        MobileAds.setRequestConfiguration(configuration)
 
         setContent {
             MegaGifsTheme {
