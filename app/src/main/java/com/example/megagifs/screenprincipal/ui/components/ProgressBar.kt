@@ -2,6 +2,7 @@ package com.example.megagifs.screenprincipal.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +23,7 @@ import androidx.compose.ui.unit.dp
 fun ProgressBarPrincipal() {
     LinearProgressIndicator(
         modifier = Modifier
-            .padding(start = 8.dp, end = 8.dp, top = 8.dp)
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
             .fillMaxWidth(),
         color = Color.LightGray,
         backgroundColor = Color.DarkGray

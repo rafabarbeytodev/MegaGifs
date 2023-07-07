@@ -1,13 +1,7 @@
 package com.example.megagifs.screenprincipal.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -24,8 +18,9 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -41,12 +36,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import com.example.megagifs.core.Routes
 import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
-import com.example.megagifs.screenprincipal.ui.components.BannerAdView
+import com.example.megagifs.ui.components.BannerAdView
 import com.example.megagifs.screenprincipal.ui.components.BottomNavigationPrincipal
 import com.example.megagifs.screenprincipal.ui.components.DrawerPrincipal
 import com.example.megagifs.screenprincipal.ui.components.FabPrincipal
@@ -70,7 +66,8 @@ import kotlinx.coroutines.withContext
  * All rights reserved 2023.
  *****/
 
-@OptIn(ExperimentalAnimationApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrincipalScreen(
     navController: NavHostController,
@@ -93,6 +90,9 @@ fun PrincipalScreen(
         mutableStateOf(true)
     }
 
+    var query by rememberSaveable { mutableStateOf("") }
+    var active by rememberSaveable { mutableStateOf(false) }
+
     var result: GifsModel? = null
     val resultGifs by principalViewModel.resultGifs.observeAsState(initial = null)
     val resultStickers by principalViewModel.resultStickers.observeAsState(initial = null)
@@ -101,82 +101,80 @@ fun PrincipalScreen(
     val resultSearchStickers by principalViewModel.resultSearchStickers.observeAsState(initial = null)
     val showProgress by principalViewModel.showProgress.observeAsState(initial = false)
 
-    val targetState by remember { mutableStateOf(true) }
+    Column {
+        Scaffold(
+            modifier = Modifier
+                .weight(1f)
+                .pointerInput(Unit) {
+                    detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
+                        val stateDrawer = scaffoldState.drawerState.isOpen
+                        if (dragAmount > 0 && !stateDrawer) {
+                            // Swiping from left to right
 
-    AnimatedContent(
-        targetState = targetState,
-        transitionSpec = {
-            fadeIn(animationSpec = tween(400, delayMillis = 1000)) +
-                    scaleIn(initialScale = 1f, animationSpec = tween(400, delayMillis = 1000)) with
-                    fadeOut(animationSpec = tween(400, delayMillis = 1000))
-        },
-    )
-    {
-
-        Column {
-            Scaffold(
-                modifier = Modifier
-                    .weight(1f)
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures(onHorizontalDrag = { _, dragAmount ->
-                            if (dragAmount > 0) {
-                                // Swiping from left to right
+                            if (type > 0) { //If the Screen is Gifs, no move
                                 when (type) {
-                                    Gifs.type -> {
-                                        goToPrincipal(Emojis.type, context, navController)
-                                    }
-
                                     Emojis.type -> {
                                         goToPrincipal(Stickers.type, context, navController)
                                     }
 
                                     Stickers.type -> {
-                                        goToFavourites(Favorites.type, context, navController)
-                                    }
-                                }
-                            } else if (dragAmount < 0) {
-                                // Swiping from right to left
-                                if (type > 0) { //If the Screen is Gifs, no move
-                                    when (type) {
-                                        Emojis.type -> {
-                                            goToPrincipal(Gifs.type, context, navController)
-                                        }
-
-                                        Stickers.type -> {
-                                            goToPrincipal(Emojis.type, context, navController)
-                                        }
+                                        goToPrincipal(Gifs.type, context, navController)
                                     }
                                 }
                             }
-                        })
-                    },
-                drawerGesturesEnabled = false,
-                scaffoldState = scaffoldState,
-                topBar = {
-                    if (type != Emojis.type)
-                        SearchBarPrincipal(onClickDrawer = {
-                            coroutineScope.launch {
-                                scaffoldState.drawerState.open()
-                            }
-                        }, type, principalViewModel, navController)
+                        } else if (dragAmount < 0 && !stateDrawer) {
+                            // Swiping from right to left
 
+                            when (type) {
+                                Gifs.type -> {
+                                    goToPrincipal(Stickers.type, context, navController)
+                                }
+
+                                Stickers.type -> {
+                                    goToPrincipal(Emojis.type, context, navController)
+                                }
+
+                                Emojis.type -> {
+                                    goToFavourites(Favorites.type, context, navController)
+                                }
+                            }
+
+                        }
+                    })
                 },
-                content = {
-                    Column {
+
+            scaffoldState = scaffoldState,
+            topBar = {
+                Column {
+                    if (type != Emojis.type) {
+                        SearchBarPrincipal(
+                            onClickDrawer = {
+                                coroutineScope.launch {
+                                    scaffoldState.drawerState.open()
+                                }
+                            }, type, principalViewModel, navController
+                        )
+                    }
+                }
+            },
+            content = {
+                Column {
+                    Box(modifier = Modifier.height(20.dp)) {
                         if (showProgress)
                             ProgressBarPrincipal()
+                    }
+                    Column {
 
                         LazyVerticalGrid(
                             modifier = Modifier
                                 .padding(
                                     bottom = it.calculateBottomPadding(),
-                                    top = 8.dp,
                                     start = 8.dp,
                                     end = 8.dp
                                 ),
                             state = rvState,
-                            columns = if (type != Emojis.type) GridCells.Fixed(2) else GridCells.Adaptive(
-                                100.dp
+                            columns = if (type != Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(
+                                4
                             )
                         ) {
                             when (type) {
@@ -307,43 +305,44 @@ fun PrincipalScreen(
                             }
                         }
                     }
-                },
-                bottomBar = {
-                    BottomNavigationPrincipal(navController, type)
-                },
-                //Drawer
-                drawerBackgroundColor = Color.DarkGray,
-                drawerContent = {
-                    DrawerPrincipal {
-                        coroutineScope.launch {
-                            scaffoldState.drawerState.close()
-                        }
+                }
+            },
+            bottomBar = {
+                BottomNavigationPrincipal(navController, type)
+            },
+            //Drawer
+            drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
+            drawerBackgroundColor = Color.DarkGray,
+            drawerContent = {
+                DrawerPrincipal {
+                    coroutineScope.launch {
+                        scaffoldState.drawerState.close()
                     }
-                },
-                //FAB
-                floatingActionButton = {
-                    val showButton by remember {
-                        derivedStateOf {
-                            rvState.firstVisibleItemIndex > 0
-                        }
+                }
+            },
+            //FAB
+            floatingActionButton = {
+                val showButton by remember {
+                    derivedStateOf {
+                        rvState.firstVisibleItemIndex > 0
                     }
-                    if (showButton) FabPrincipal(rvState)
-                },
-                backgroundColor = Color.Black
-            )
-            Spacer(
-                modifier = Modifier
-                    .background(Color.Black)
-                    .height(8.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .background(Color.LightGray)
-                    .height(62.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                BannerAdView()
-            }
+                }
+                if (showButton) FabPrincipal(rvState)
+            },
+            backgroundColor = Color.Black
+        )
+        Spacer(
+            modifier = Modifier
+                .background(Color.Black)
+                .height(8.dp)
+        )
+        Box(
+            modifier = Modifier
+                .background(Color.LightGray)
+                .height(62.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            BannerAdView()
         }
     }
 }

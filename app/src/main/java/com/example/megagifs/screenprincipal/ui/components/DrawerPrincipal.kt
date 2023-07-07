@@ -3,6 +3,7 @@ package com.example.megagifs.screenprincipal.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +24,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -44,34 +47,23 @@ import com.example.megagifs.R
 @Composable
 fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
 
-    Column() {
+    Column {
         Box(
             modifier = Modifier
                 .background(Color.Gray)
                 .fillMaxWidth()
-                .height(150.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.airealogo),
-                    contentDescription = "Airea",
-                    modifier = Modifier
-                        .padding(12.dp)
-                )
-                Text(
-                    text = "Airea developments",
-                    color = Color.White,
-                    fontSize = 18.sp
-                )
-            }
-        }
 
+            Image(
+                painter = painterResource(id = R.drawable.airealogo),
+                contentDescription = "Airea",
+                modifier = Modifier
+                    .padding(4.dp)
+            )
+        }
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(bottom = 8.dp, start = 8.dp, top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -81,7 +73,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             )
             Text(
                 text = "Primera opción", modifier = Modifier
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable { onCloseDrawer() },
                 color = Color.White,
@@ -92,7 +84,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
         }
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(bottom = 8.dp, start = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -102,7 +94,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             )
             Text(
                 text = "Segunda opción", modifier = Modifier
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable { onCloseDrawer() },
                 color = Color.White,
@@ -113,7 +105,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
         }
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(bottom = 8.dp, start = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -123,7 +115,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             )
             Text(
                 text = "Tercera opción", modifier = Modifier
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable { onCloseDrawer() },
                 color = Color.White,
@@ -135,7 +127,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
 
         Divider(
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(bottom = 8.dp)
                 .size(1.dp)
                 .alpha(0.1f),
@@ -144,7 +136,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(bottom = 8.dp, start = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -154,7 +146,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             )
             Text(
                 text = "Cuarta opción", modifier = Modifier
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable { onCloseDrawer() },
                 color = Color.White,
@@ -165,7 +157,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
         }
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .padding(bottom = 8.dp, start = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -176,7 +168,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             )
             Text(
                 text = "Quinta opción", modifier = Modifier
-                    .fillMaxWidth()
+                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable { onCloseDrawer() },
                 color = Color.White,

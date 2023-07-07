@@ -1,13 +1,23 @@
 package com.example.megagifs.screenfavorites.ui
 
 import android.content.Context
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +26,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -46,6 +57,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -53,7 +66,7 @@ import com.example.megagifs.core.Origins
 import com.example.megagifs.core.Routes
 import com.example.megagifs.core.Types.*
 import com.example.megagifs.screenfavorites.ui.model.FavModel
-import com.example.megagifs.screenprincipal.ui.components.BannerAdView
+import com.example.megagifs.ui.components.BannerAdView
 import com.example.megagifs.screenprincipal.ui.components.BottomNavigationPrincipal
 import com.example.megagifs.screenprincipal.ui.components.FabPrincipal
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
@@ -88,9 +101,7 @@ fun FavoritesScreen(
 
     val context = LocalContext.current
 
-    var firstTime by rememberSaveable {
-        mutableStateOf(true)
-    }
+    var firstTime by rememberSaveable { mutableStateOf(true) }
 
     val showProgress by favoritesScreenViewModel.showProgress.observeAsState(initial = false)
 
@@ -102,40 +113,25 @@ fun FavoritesScreen(
             modifier = Modifier
                 .weight(1f)
                 .pointerInput(Unit) {
-                    detectHorizontalDragGestures { _, dragAmount ->
+                    detectHorizontalDragGestures { change, dragAmount ->
+                        change.consume()
                         if (dragAmount > 0) {
                             // Swiping from left to right
-                            // Is the last Screen to Right, no move
-                        } else if (dragAmount < 0) {
-                            // Swiping from right to left
                             //Go to principal/Stickers
                             clearCache(context = context)
                             navController.navigate(
                                 Routes.PrincipalScreen.createRoute(
-                                    Stickers.type
+                                    Emojis.type
                                 )
                             )
+                        } else {
+                            // Swiping from right to left
+                            // Is the last Screen to Right, no move
                         }
                     }
                 },
             backgroundColor = Color.Black,
             scaffoldState = scaffoldState,
-            /*topBar = {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "close",
-                        tint = Color.Yellow,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterEnd)
-                            .clickable {
-                                navController.popBackStack()
-                                goToPrincipal(Gifs.type, context, navController)
-                            }
-                    )
-                }
-            },*/
             content = {
                 Column {
                     if (showProgress)
@@ -180,43 +176,52 @@ fun FavoritesScreen(
                                         modifier = Modifier
                                             .padding(2.dp)
                                     ) {
-                                        GifImageGlide(positionImage = positionImage, url = url, modifier = Modifier
-                                            .aspectRatio(1f)
-                                            .background(Color.Transparent)
-                                            .clickable {
-                                                val isFavorite =
-                                                    true //lo fijamos a true porque es la pantalla de favoritos
-                                                // y evidentemente son favoritos, pero en otras situaciones habrá que comprobarlo
-                                                onFavoriteChange(!isFavorite)
-                                                navController.popBackStack()
-                                                navController.navigate(
-                                                    Routes.DetailsScreen.createRoute(
-                                                        type = item.type,
-                                                        origin = Origins.Favorites.origin,
-                                                        url = url,
-                                                        avatar = item.avatar_url,
-                                                        displayName = item.display_name,
-                                                        userName = item.username,
-                                                        verified = item.is_verified,
-                                                        id = item.id,
-                                                        stateFavorite = stateFavorite
+                                        GifImageGlide(positionImage = positionImage,
+                                            url = url,
+                                            modifier = Modifier
+                                                .aspectRatio(1f)
+                                                .background(Color.Transparent)
+                                                .clickable {
+                                                    val isFavorite =
+                                                        true //lo fijamos a true porque es la pantalla de favoritos
+                                                    // y evidentemente son favoritos, pero en otras situaciones habrá que comprobarlo
+                                                    onFavoriteChange(!isFavorite)
+                                                    navController.popBackStack()
+                                                    Log.i("DEVELOPRAFA","Type enviado: $type")
+                                                    navController.navigate(
+                                                        Routes.DetailsScreen.createRoute(
+                                                            type = type,
+                                                            origin = Origins.Favorites.origin,
+                                                            url = url,
+                                                            avatar = item.avatar_url,
+                                                            displayName = item.display_name,
+                                                            userName = item.username,
+                                                            verified = item.is_verified,
+                                                            id = item.id,
+                                                            stateFavorite = stateFavorite
+                                                        )
                                                     )
-                                                )
-                                            })
+                                                })
                                     }
                                 }
                             }
                         }
                     )
-                    if(result.isNullOrEmpty()){
-                        Column(horizontalAlignment = Alignment.CenterHorizontally ,
+                    if (result.isNullOrEmpty()) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
-                            .fillMaxSize()) {
+                                .fillMaxSize()
+                        ) {
                             Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                                Text(text = "Add your GIFs favourites",color=Color.Yellow, fontSize = 22.sp)
+                                Text(
+                                    text = "Add your GIFs favourites",
+                                    color = Color.Yellow,
+                                    fontSize = 22.sp
+                                )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
-                            AnimatedIconReverse(navController, Icons.TwoTone.FavoriteBorder)
+                            AnimatedIcon(navController, Icons.TwoTone.FavoriteBorder)
                         }
                     }
                 }
@@ -256,16 +261,16 @@ fun FavoritesScreen(
         }
     }
 }
+
 @Composable
-fun AnimatedIconReverse(navController: NavHostController, icon: ImageVector) {
+fun AnimatedIcon(navController: NavHostController, icon: ImageVector) {
 
     val scaleAnim = rememberInfiniteTransition()
         .animateFloat(
             initialValue = 1f,
             targetValue = 1.2f,
             animationSpec = infiniteRepeatable(
-                animation = tween(800),
-                repeatMode = RepeatMode.Reverse
+                animation = tween(800)
             )
         )
 
@@ -288,12 +293,4 @@ fun AnimatedIconReverse(navController: NavHostController, icon: ImageVector) {
     }
 }
 
-fun goToPrincipal(type: Int, context: Context, navController: NavHostController){
-    clearCache(context = context)
-    navController.navigate(
-        Routes.PrincipalScreen.createRoute(
-            type
-        )
-    )
-}
 

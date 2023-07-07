@@ -1,9 +1,10 @@
-package com.example.megagifs.screenprincipal.ui.components
+package com.example.megagifs.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.megagifs.core.ADMON_BANNER_ID_PROD
 import com.example.megagifs.core.ADMON_BANNER_ID_TEST
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -26,7 +27,6 @@ fun BannerAdView() {
         factory = { context ->
             AdView(context).apply {
                 setAdSize(AdSize.BANNER)
-                // Add your adUnitID, this is for testing.
                 adUnitId = ADMON_BANNER_ID_TEST
                 loadAd(AdRequest.Builder().build())
             }

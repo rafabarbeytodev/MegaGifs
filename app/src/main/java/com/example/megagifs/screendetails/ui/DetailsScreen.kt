@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,14 +68,14 @@ import com.example.megagifs.R
 import com.example.megagifs.core.Origins.*
 import com.example.megagifs.core.Origins.Favorites
 import com.example.megagifs.core.Routes
-import com.example.megagifs.core.Routes.PrincipalScreen
+import com.example.megagifs.core.Routes.*
 import com.example.megagifs.core.Types
 import com.example.megagifs.core.Types.*
 import com.example.megagifs.screendetails.ui.components.DialogPermission
 import com.example.megagifs.screenfavorites.ui.FavoritesScreenViewModel
 import com.example.megagifs.screenfavorites.ui.model.FavModel
 import com.example.megagifs.screenprincipal.ui.PrincipalScreenViewModel
-import com.example.megagifs.screenprincipal.ui.components.BannerAdView
+import com.example.megagifs.ui.components.BannerAdView
 import com.example.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
 import com.example.megagifs.screenprincipal.ui.model.GifsModel
 import com.example.megagifs.ui.components.GifImageGlide
@@ -379,8 +380,7 @@ fun DetailsScreen(
                     contentDescription = "Download"
                 )
 
-                AnimatedIcon()
-                /*Icon(
+                Icon(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 8.dp)
                         .clickable {
@@ -392,7 +392,7 @@ fun DetailsScreen(
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.CopyAll,
                     contentDescription = "Copy"
-                )*/
+                )
             }
             Box(
                 Modifier
@@ -402,9 +402,7 @@ fun DetailsScreen(
                 Icon(
                     modifier = Modifier
                         .clickable {
-                            if (origin == Favorites.origin) {
-                                navController.navigate(Routes.FavoritesScreen.route)
-                            } else {
+                            Log.i("DEVELOPRAFA","Type recibido: $typeResource")
                                 when (typeResource) {
                                     SearchGifs.type,
                                     SearchStickers.type -> {
@@ -414,11 +412,9 @@ fun DetailsScreen(
                                             )
                                         )
                                     }
-
-                                    /*Types.Favorites.type -> {
-                                        navController.navigate(Routes.FavoritesScreen.route)
-                                    }*/
-
+                                    Types.Favorites.type -> {
+                                        navController.navigate(FavoritesScreen.createRoute(typeResource))
+                                    }
                                     else -> {
                                         navController.navigate(
                                             PrincipalScreen.createRoute(
@@ -426,9 +422,7 @@ fun DetailsScreen(
                                             )
                                         )
                                     }
-
                                 }
-                            }
                         },
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.Close,
@@ -587,7 +581,7 @@ fun DetailsScreen(
                                                     navController.popBackStack()
                                                     //Pasar este Item al bloque superior de la pantalla details
                                                     navController.navigate(
-                                                        Routes.DetailsScreen.createRoute(
+                                                        DetailsScreen.createRoute(
                                                             type = typeResource,
                                                             url = urlHorizontal,
                                                             origin = typeResource,
@@ -623,39 +617,6 @@ fun DetailsScreen(
         ) {
             BannerAdView()
         }
-    }
-}
-
-@Composable
-fun AnimatedIcon() {
-
-    var scale by remember { mutableStateOf(1f) }
-    val scaleAnim = remember { Animatable(1f) }
-
-    LaunchedEffect(scale) {
-        scaleAnim.animateTo(
-            targetValue = scale,
-            animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
-        )
-    }
-
-    Box(
-        modifier = Modifier
-            .scale(scaleAnim.value)
-            .clickable {
-                scale = if (scale == 1f) 1.5f else 1f
-            }
-    ) {
-        Icon(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .clickable {
-
-                },
-            tint = Color.Yellow,
-            imageVector = Icons.TwoTone.CopyAll,
-            contentDescription = "Copy"
-        )
     }
 }
 

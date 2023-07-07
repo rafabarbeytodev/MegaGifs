@@ -14,10 +14,10 @@ android {
 
     defaultConfig {
         applicationId "com.example.megagifs"
-        minSdk 29
+        minSdk 28
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "Piscis 1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,7 +27,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
