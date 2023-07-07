@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.megagifs'
+    namespace 'com.aireadevs.megagifs'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.megagifs"
+        applicationId "com.aireadevs.megagifs"
         minSdk 28
         targetSdk 33
         versionCode 1
