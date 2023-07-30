@@ -14,10 +14,8 @@ import androidx.navigation.navArgument
 import com.aireadevs.megagifs.core.Routes
 import com.aireadevs.megagifs.screendetails.ui.DetailsScreen
 import com.aireadevs.megagifs.screendetails.ui.DetailsScreenViewModel
-import com.aireadevs.megagifs.screenfavorites.ui.FavoritesScreen
-import com.aireadevs.megagifs.screenfavorites.ui.FavoritesScreenViewModel
-import com.aireadevs.megagifs.screenprincipal.ui.PrincipalScreen
-import com.aireadevs.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.aireadevs.megagifs.screenimages.ui.ImagesScreen
+import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
 import com.aireadevs.megagifs.screensplash.ui.SplashScreen
 
 /*****
@@ -32,9 +30,8 @@ import com.aireadevs.megagifs.screensplash.ui.SplashScreen
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun AppNavigation(
-    principalViewModel: PrincipalScreenViewModel,
-    detailsViewModel: DetailsScreenViewModel,
-    favoriteViewModel: FavoritesScreenViewModel
+    imagesVM: ImagesScreenViewModel,
+    detailsVM: DetailsScreenViewModel
 ) {
 
     var stateFavorite by remember { mutableStateOf(false) }
@@ -49,18 +46,15 @@ fun AppNavigation(
         }
 
         composable(
-            Routes.PrincipalScreen.route,
+            Routes.ImagesScreen.route,
             arguments = listOf(
-                navArgument("type") { defaultValue = 0 },
                 navArgument("search") { defaultValue = "" })
         ) { backStackEntry ->
             backStackEntry.arguments?.let { arguments ->
-                PrincipalScreen(
+                ImagesScreen(
                     navigationController,
-                    arguments.getInt("type"),
                     arguments.getString("search").orEmpty(),
-                    principalViewModel,
-                    favoriteViewModel,
+                    imagesVM,
                     stateFavorite
                 ) { state ->
                     stateFavorite = !state
@@ -73,7 +67,6 @@ fun AppNavigation(
             arguments = listOf(
                 navArgument("url") { defaultValue = "" },
                 navArgument("type") { defaultValue = 0 },
-                navArgument("origin") { defaultValue = 0 },
                 navArgument("avatar") { defaultValue = "" },
                 navArgument("displayName") { defaultValue = "" },
                 navArgument("userName") { defaultValue = "" },
@@ -85,31 +78,14 @@ fun AppNavigation(
                 DetailsScreen(
                     navigationController,
                     arguments.getInt("type"),
-                    arguments.getInt("origin"),
                     arguments.getString("url").orEmpty(),
                     arguments.getString("avatar").orEmpty(),
                     arguments.getString("displayName").orEmpty(),
                     arguments.getString("userName").orEmpty(),
                     arguments.getBoolean("verified"),
                     arguments.getString("id").orEmpty(),
-                    principalViewModel,
-                    detailsViewModel,
-                    favoriteViewModel,
-                    stateFavorite
-                ) { state ->
-                    stateFavorite = !state
-                }
-            }
-        }
-        composable(
-            Routes.FavoritesScreen.route,
-            arguments = listOf(navArgument("type") { defaultValue = 0 })
-        ) { backStackEntry ->
-            backStackEntry.arguments?.let { arguments ->
-                FavoritesScreen(
-                    navigationController,
-                    favoriteViewModel,
-                    arguments.getInt("type"),
+                    imagesVM,
+                    detailsVM,
                     stateFavorite
                 ) { state ->
                     stateFavorite = !state

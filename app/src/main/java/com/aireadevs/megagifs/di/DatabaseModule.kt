@@ -2,8 +2,8 @@ package com.aireadevs.megagifs.di
 
 import android.content.Context
 import androidx.room.Room
-import com.aireadevs.megagifs.screenfavorites.data.room.GifsFavDao
-import com.aireadevs.megagifs.screenfavorites.data.room.GifsFavDatabase
+import com.aireadevs.megagifs.screenimages.data.room.GifsFavDao
+import com.aireadevs.megagifs.screenimages.data.room.GifsFavDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

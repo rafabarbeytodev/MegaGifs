@@ -10,8 +10,13 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.aireadevs.megagifs.screendetails.domain.AddGifFavUseCase
+import com.aireadevs.megagifs.screendetails.domain.DeleteGifFavUseCase
+import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,7 +37,9 @@ import javax.inject.Inject
  *****/
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(
-    ) : ViewModel() {
+    private val addGifFavUseCase: AddGifFavUseCase,
+    private val deleteGifFavUseCase: DeleteGifFavUseCase
+) : ViewModel() {
 
     fun getGifBytesFromUrl(url: String): ByteArray? {
         val client = OkHttpClient()
@@ -108,5 +115,17 @@ class DetailsScreenViewModel @Inject constructor(
         val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("url", url)
         clipboardManager.setPrimaryClip(clipData)
+    }
+
+    fun onAddFav(favModel: FavModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            addGifFavUseCase.invoke(favModel)
+        }
+    }
+
+    fun onDeleteFav(favModel: FavModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteGifFavUseCase.invoke(favModel)
+        }
     }
 }

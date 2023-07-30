@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aireadevs.megagifs.screenfavorites.domain.AddGifFavUseCase
-import com.aireadevs.megagifs.screenfavorites.domain.DeleteGifFavUseCase
-import com.aireadevs.megagifs.screenfavorites.domain.GetGifsFavUseCase
-import com.aireadevs.megagifs.screenfavorites.ui.model.FavModel
+import com.aireadevs.megagifs.screendetails.domain.AddGifFavUseCase
+import com.aireadevs.megagifs.screendetails.domain.DeleteGifFavUseCase
+import com.aireadevs.megagifs.screenimages.domain.favoritesUsesCase.GetGifsFavUseCase
+import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,15 +25,13 @@ import kotlin.coroutines.suspendCoroutine
  *
  * All rights reserved 2023.
  *****/
+/*
 @HiltViewModel
 class FavoritesScreenViewModel @Inject constructor(
     private val getGifsFavUseCase: GetGifsFavUseCase,
     private val addGifFavUseCase: AddGifFavUseCase,
     private val deleteGifFavUseCase: DeleteGifFavUseCase
 ) : ViewModel() {
-
-    private val _showProgress = MutableLiveData<Boolean>()
-    val showProgress: LiveData<Boolean> = _showProgress
 
     private val _resultGifsFav = MutableLiveData<List<FavModel>>()
     val resultGifsFav: LiveData<List<FavModel>> = _resultGifsFav
@@ -75,8 +73,5 @@ class FavoritesScreenViewModel @Inject constructor(
             deleteGifFavUseCase.invoke(favModel)
         }
     }
-
-    fun onShowProgress(state: Boolean) {
-        _showProgress.value = state
-    }
 }
+*/

@@ -60,17 +60,14 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.aireadevs.megagifs.R
-import com.aireadevs.megagifs.core.Origins.*
 import com.aireadevs.megagifs.core.Routes.*
-import com.aireadevs.megagifs.core.Types
 import com.aireadevs.megagifs.core.Types.*
 import com.aireadevs.megagifs.screendetails.ui.components.DialogPermission
-import com.aireadevs.megagifs.screenfavorites.ui.FavoritesScreenViewModel
-import com.aireadevs.megagifs.screenfavorites.ui.model.FavModel
-import com.aireadevs.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.aireadevs.megagifs.screenimages.ui.model.FavModel
+import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
 import com.aireadevs.megagifs.ui.components.BannerAdView
-import com.aireadevs.megagifs.screenprincipal.ui.components.ProgressBarPrincipal
-import com.aireadevs.megagifs.screenprincipal.ui.model.GifsModel
+import com.aireadevs.megagifs.screenimages.ui.components.ProgressBarPrincipal
+import com.aireadevs.megagifs.screenimages.ui.model.GifsModel
 import com.aireadevs.megagifs.ui.components.GifImageGlide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -93,16 +90,14 @@ import kotlinx.coroutines.withContext
 fun DetailsScreen(
     navController: NavHostController,
     typeResource: Int,
-    origin: Int,
     url: String,
     avatar: String,
     displayName: String,
     userName: String,
     verified: Boolean,
     id: String,
-    principalViewModel: PrincipalScreenViewModel,
-    detailsViewModel: DetailsScreenViewModel,
-    favoriteViewModel: FavoritesScreenViewModel,
+    imagesVM: ImagesScreenViewModel,
+    detailsVM: DetailsScreenViewModel,
     stateFavorite: Boolean,
     onFavoriteChange: (Boolean) -> Unit
 ) {
@@ -120,10 +115,10 @@ fun DetailsScreen(
     var firstTime by remember { mutableStateOf(true) }
 
     var result: GifsModel? = null
-    val resultSearchGifs by principalViewModel.resultSearchGifs.observeAsState(initial = null)
-    val resultSearchStickers by principalViewModel.resultSearchStickers.observeAsState(initial = null)
-    val showProgress by principalViewModel.showProgress.observeAsState(initial = false)
+    val resultSearchGifs by imagesVM.resultSearchGifs.observeAsState(initial = null)
+    val resultSearchStickers by imagesVM.resultSearchStickers.observeAsState(initial = null)
 
+    val showProgress by imagesVM.showProgress.observeAsState(initial = false)
 
     val launcherShareGif =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -216,7 +211,7 @@ fun DetailsScreen(
                             onFavoriteChange(stateFavorite)
                             coroutineScope.launch(Dispatchers.IO) {
                                 if (!stateFavorite) {
-                                    favoriteViewModel.onAddFav(
+                                    detailsVM.onAddFav(
                                         FavModel(
                                             url = url,
                                             avatar_url = avatar,
@@ -237,8 +232,8 @@ fun DetailsScreen(
                                             .show()
                                     }
                                 } else {
-                                    val search = favoriteViewModel.onGetGifById(id)
-                                    favoriteViewModel.onDeleteFav(
+                                    val search = imagesVM.onGetGifById(id)
+                                    detailsVM.onDeleteFav(
                                         FavModel(
                                             id_int = search.first().id_int,
                                             url = url,
@@ -250,7 +245,7 @@ fun DetailsScreen(
                                             type = typeResource
                                         )
                                     )
-                                    favoriteViewModel.onGetGifsFav()
+                                    imagesVM.onGetGifsFav()
                                     withContext(Dispatchers.Main) {
                                         Toast
                                             .makeText(
@@ -273,13 +268,13 @@ fun DetailsScreen(
                         .clickable {
                             if (shareEnabled) {
                                 coroutineScope.launch(Dispatchers.IO) {
-                                    bytes = detailsViewModel.getGifBytesFromUrl(url)
+                                    bytes = detailsVM.getGifBytesFromUrl(url)
                                     if (bytes != null) {
                                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                             type = "image/gif"
                                             putExtra(
                                                 Intent.EXTRA_STREAM,
-                                                detailsViewModel.getUriFromBytes(bytes!!, context)
+                                                detailsVM.getUriFromBytes(bytes!!, context)
                                             )
                                         }
                                         launcherShareGif.launch(shareIntent)
@@ -307,7 +302,7 @@ fun DetailsScreen(
                         .padding(end = 24.dp, top = 8.dp, bottom = 8.dp)
                         .clickable {
                             coroutineScope.launch(Dispatchers.IO) {
-                                bytes = detailsViewModel.getGifBytesFromUrl(url)
+                                bytes = detailsVM.getGifBytesFromUrl(url)
 
                                 if (bytes != null) {
                                     singlePermission =
@@ -336,7 +331,7 @@ fun DetailsScreen(
                                             singlePermission
                                         ) == PackageManager.PERMISSION_GRANTED -> {
                                             showDialogPermission = false
-                                            detailsViewModel.saveGif(
+                                            detailsVM.saveGif(
                                                 bytes!!,
                                                 context
                                             )
@@ -377,7 +372,7 @@ fun DetailsScreen(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 8.dp)
                         .clickable {
-                            detailsViewModel.copyToClipboard(context, url)
+                            detailsVM.copyToClipboard(context, url)
                             Toast
                                 .makeText(context, "Url copiada", Toast.LENGTH_SHORT)
                                 .show()
@@ -400,20 +395,12 @@ fun DetailsScreen(
                                     SearchGifs.type,
                                     SearchStickers.type -> {
                                         navController.navigate(
-                                            PrincipalScreen.createRoute(
-                                                typeResource - 4
-                                            )
-                                        )
-                                    }
-                                    Types.Favorites.type -> {
-                                        navController.navigate(FavoritesScreen.createRoute(typeResource))
+                                            ImagesScreen.createRoute())
+                                        //Hay que ver como devolver la string buscada a la ImagesScreen
                                     }
                                     else -> {
                                         navController.navigate(
-                                            PrincipalScreen.createRoute(
-                                                typeResource
-                                            )
-                                        )
+                                            ImagesScreen.createRoute())
                                     }
                                 }
                         },
@@ -509,27 +496,27 @@ fun DetailsScreen(
                 rows = GridCells.Fixed(1),
                 content = {
                     when (typeResource) {
-                        Types.Gifs.type,
+                        Gifs.type,
                         SearchGifs.type -> {
                             coroutineScope.launch {
                                 if (firstTime)
-                                    principalViewModel.onShowProgress(true)
-                                principalViewModel.onGetSearchGifs(userName)
-                                favoriteViewModel.onGetGifsFav()
-                                principalViewModel.onShowProgress(false)
+                                    imagesVM.onShowProgress(true)
+                                imagesVM.onGetSearchGifs(userName)
+                                imagesVM.onGetGifsFav()
+                                imagesVM.onShowProgress(false)
                                 firstTime = false
                             }
                             result = resultSearchGifs
                         }
 
-                        Types.Stickers.type,
+                        Stickers.type,
                         SearchStickers.type -> {
                             coroutineScope.launch {
                                 if (firstTime)
-                                    principalViewModel.onShowProgress(true)
-                                principalViewModel.onGetSearchStickers(userName)
-                                favoriteViewModel.onGetGifsFav()
-                                principalViewModel.onShowProgress(false)
+                                    imagesVM.onShowProgress(true)
+                                imagesVM.onGetSearchStickers(userName)
+                                imagesVM.onGetGifsFav()
+                                imagesVM.onShowProgress(false)
                                 firstTime = false
                             }
                             result = resultSearchStickers
@@ -563,7 +550,7 @@ fun DetailsScreen(
                                                 val deferred = listOf(
                                                     async {
                                                         isFavorite =
-                                                            favoriteViewModel.checkIdIsFavorite(
+                                                            imagesVM.checkIdIsFavorite(
                                                                 item.id
                                                             )
                                                     }
@@ -577,7 +564,6 @@ fun DetailsScreen(
                                                         DetailsScreen.createRoute(
                                                             type = typeResource,
                                                             url = urlHorizontal,
-                                                            origin = typeResource,
                                                             avatar = item.user?.avatar_url.orEmpty(),
                                                             displayName = item.user?.display_name.orEmpty(),
                                                             userName = item.user?.username.orEmpty(),

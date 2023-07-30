@@ -16,8 +16,7 @@ import com.aireadevs.megagifs.navigation.AppNavigation
 import com.aireadevs.megagifs.core.Routes.*
 import com.aireadevs.megagifs.core.URL_PLAY_STORE
 import com.aireadevs.megagifs.screendetails.ui.DetailsScreenViewModel
-import com.aireadevs.megagifs.screenfavorites.ui.FavoritesScreenViewModel
-import com.aireadevs.megagifs.screenprincipal.ui.PrincipalScreenViewModel
+import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
 import com.aireadevs.megagifs.ui.components.ShowNewVersion
 import com.aireadevs.megagifs.ui.theme.MegaGifsTheme
 import com.google.android.gms.ads.MobileAds
@@ -28,10 +27,9 @@ import java.util.Collections
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val principalViewModel: PrincipalScreenViewModel by viewModels()
-    private val detailsViewModel: DetailsScreenViewModel by viewModels()
-    private val favoriteViewModel: FavoritesScreenViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()
+    private val imagesVM: ImagesScreenViewModel by viewModels()
+    private val detailsVM: DetailsScreenViewModel by viewModels()
+    private val mainVM: MainViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +46,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     //Control de versiones con Firebase
-                    mainViewModel.checkVersion()
-                    val newVersion by mainViewModel.newVersion.observeAsState(initial = false)
+                    mainVM.checkVersion()
+                    val newVersion by mainVM.newVersion.observeAsState(initial = false)
                     ShowNewVersion(
                         show = newVersion,
                         onDismiss = { finish() },
@@ -59,9 +56,8 @@ class MainActivity : ComponentActivity() {
 
                     //Gestion de la navegación
                     AppNavigation(
-                        principalViewModel,
-                        detailsViewModel,
-                        favoriteViewModel)
+                        imagesVM,
+                        detailsVM)
                 }
             }
         }

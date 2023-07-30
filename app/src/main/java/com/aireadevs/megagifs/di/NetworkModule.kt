@@ -1,6 +1,6 @@
 package com.aireadevs.megagifs.di
 
-import com.aireadevs.megagifs.screenprincipal.data.network.GifsClient
+import com.aireadevs.megagifs.screenimages.data.retrofit.GifsClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -12,16 +12,15 @@ package com.aireadevs.megagifs.core
 sealed class Routes(val route: String) {
 
     object SplashScreen : Routes("splashscreen")
-    object PrincipalScreen : Routes("principalScreen?type={type}&search={search}") {
-        fun createRoute(type: Int, search: String = "") =
-            "principalScreen?type=$type&search=$search"
+    object ImagesScreen : Routes("imagesScreen?search={search}") {
+        fun createRoute(search: String = "") =
+            "imagesScreen?search=$search"
     }
 
     object DetailsScreen :
-        Routes("detailsScreen?type={type}&origin={origin}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
+        Routes("detailsScreen?type={type}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
         fun createRoute(
             type: Int,
-            origin: Int,
             url: String,
             avatar: String,
             displayName: String,
@@ -30,13 +29,9 @@ sealed class Routes(val route: String) {
             id: String,
             stateFavorite: Boolean
         ) =
-            "detailsScreen?type=$type&origin=$origin&url=$url&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified&id=$id&stateFavorite=$stateFavorite"
+            "detailsScreen?type=$type&url=$url&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified&id=$id&stateFavorite=$stateFavorite"
     }
 
     object FavoritesScreen :
-        Routes("favoritesScreen?type={type}") {
-        fun createRoute(
-            type: Int
-        ) = "favoritesScreen?type=$type"
-    }
+        Routes("favoritesScreen")
 }
