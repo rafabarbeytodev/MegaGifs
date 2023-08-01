@@ -32,15 +32,13 @@ import com.aireadevs.megagifs.R
  *****/
 
 @Composable
-fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
-
+fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit) {
     Column {
         Box(
             modifier = Modifier
                 .background(Color.Gray)
                 .fillMaxWidth()
         ) {
-
             Image(
                 painter = painterResource(id = R.drawable.airealogo),
                 contentDescription = "Airea",
@@ -61,10 +59,10 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             Text(
                 text = "Developer Contact",
                 modifier = Modifier
-                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable {
                         onCloseDrawer()
+                        onShowDialog(true)
                     },
                 color = Color.White,
                 fontFamily = FontFamily.Serif,
@@ -85,7 +83,6 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             Text(
                 text = "Version Info",
                 modifier = Modifier
-                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable {
                         onCloseDrawer()
@@ -109,7 +106,6 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit) {
             Text(
                 text = "Privacy Policy",
                 modifier = Modifier
-                    //.fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable {
                         onCloseDrawer()

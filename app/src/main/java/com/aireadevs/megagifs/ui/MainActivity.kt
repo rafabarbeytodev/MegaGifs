@@ -54,10 +54,14 @@ class MainActivity : ComponentActivity() {
                         onDismiss = { finish() },
                         onConfirm = { goToPlayStore() })
 
+                    //Control de mail de contacto con developer
+                    //Cargamos el dato de firebase cuando arrancamos la aplicación
+                    imagesVM.getMailDeveloper()
+                    //Observamos cualquier cambio del mail de contacto
+                    mainVM.checkMailDeveloper()
+
                     //Gestion de la navegación
-                    AppNavigation(
-                        imagesVM,
-                        detailsVM)
+                    AppNavigation(imagesVM, detailsVM)
                 }
             }
         }

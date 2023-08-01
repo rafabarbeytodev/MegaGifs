@@ -98,10 +98,13 @@ dependencies {
     //Admon
     implementation 'com.google.android.gms:play-services-ads:22.2.0'
 
-
+    //Firebase
     implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
     implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.7'
+
+    //Datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 
 
     testImplementation 'junit:junit:4.13.2'

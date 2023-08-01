@@ -1,6 +1,8 @@
 package com.aireadevs.megagifs.screenimages.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -39,12 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import com.aireadevs.megagifs.core.Routes
 import com.aireadevs.megagifs.core.Types.*
+import com.aireadevs.megagifs.screenimages.ui.components.AlertDialogDeveloperContact
 import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import com.aireadevs.megagifs.ui.components.BannerAdView
 import com.aireadevs.megagifs.screenimages.ui.components.BottomNavigationPrincipal
@@ -69,6 +73,7 @@ import kotlinx.coroutines.withContext
  * All rights reserved 2023.
  *****/
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ImagesScreen(
@@ -83,6 +88,12 @@ fun ImagesScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val rvState = rememberLazyGridState()
+
+    val context = LocalContext.current
+
+    var showDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     var firstTime by rememberSaveable {
         mutableStateOf(true)
@@ -102,6 +113,7 @@ fun ImagesScreen(
     val showProgress by imagesVM.showProgress.observeAsState(initial = false)
     val typeImage by imagesVM.typeImage.observeAsState(initial = 0)
 
+    val mailDeveloper by imagesVM.mailDeveloper.observeAsState(initial = "")
 
     Column {
         Scaffold(
@@ -139,7 +151,7 @@ fun ImagesScreen(
                             columns = if (typeImage != Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(
                                 4
                             )
-                        ){
+                        ) {
                             when (typeImage) {
                                 Gifs.type -> {
                                     if (firstTime) {
@@ -337,6 +349,11 @@ fun ImagesScreen(
                         }
                     }
                 }
+                if (showDialog) AlertDialogDeveloperContact(
+                    onCloseAlert = { showDialog = false },
+                    onSendMessage = { message ->
+                        imagesVM.sendMail(context,message,mailDeveloper)
+                    })
             },
             bottomBar = {
                 BottomNavigationPrincipal(
@@ -347,11 +364,15 @@ fun ImagesScreen(
             drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
             drawerBackgroundColor = Color.DarkGray,
             drawerContent = {
-                DrawerPrincipal {
-                    coroutineScope.launch {
-                        scaffoldState.drawerState.close()
-                    }
-                }
+                DrawerPrincipal(
+                    onCloseDrawer = {
+                        coroutineScope.launch {
+                            scaffoldState.drawerState.close()
+                        }
+                    },
+                    onShowDialog = { show ->
+                        showDialog = show
+                    })
             },
             //FAB
             floatingActionButton = {
@@ -374,6 +395,8 @@ fun ImagesScreen(
         }
     }
 }
+
+
 
 @Composable
 fun AnimatedIcon(imagesVM: ImagesScreenViewModel, icon: ImageVector) {
@@ -401,5 +424,8 @@ fun AnimatedIcon(imagesVM: ImagesScreenViewModel, icon: ImageVector) {
         )
     }
 }
+
+
+
 
 
