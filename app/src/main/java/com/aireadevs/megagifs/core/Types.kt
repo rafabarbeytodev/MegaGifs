@@ -18,4 +18,7 @@ sealed class Types(val type: Int) {
     object SearchGifs : Types(4)
     object SearchStickers : Types(5)
 
+    object DialogDeveloper: Types(6)
+    object DialogVersionInfo: Types(7)
+
 }

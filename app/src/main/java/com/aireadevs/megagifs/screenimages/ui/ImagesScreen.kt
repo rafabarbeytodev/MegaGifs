@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import com.aireadevs.megagifs.core.Routes
 import com.aireadevs.megagifs.core.Types.*
-import com.aireadevs.megagifs.screenimages.ui.components.AlertDialogDeveloperContact
+import com.aireadevs.megagifs.screenimages.ui.components.DeveloperContact
 import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import com.aireadevs.megagifs.ui.components.BannerAdView
 import com.aireadevs.megagifs.screenimages.ui.components.BottomNavigationPrincipal
@@ -56,6 +56,7 @@ import com.aireadevs.megagifs.screenimages.ui.components.DrawerPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.FabPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.ProgressBarPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.SearchBarPrincipal
+import com.aireadevs.megagifs.screenimages.ui.components.VersionInfo
 import com.aireadevs.megagifs.screenimages.ui.model.GifsModel
 import com.aireadevs.megagifs.ui.components.GifImageGlide
 import kotlinx.coroutines.Dispatchers
@@ -93,6 +94,9 @@ fun ImagesScreen(
 
     var showDialog by rememberSaveable {
         mutableStateOf(false)
+    }
+    var typeDialog by rememberSaveable {
+        mutableStateOf(0)
     }
 
     var firstTime by rememberSaveable {
@@ -349,11 +353,15 @@ fun ImagesScreen(
                         }
                     }
                 }
-                if (showDialog) AlertDialogDeveloperContact(
+                //Mostramos Dialog de desarrollador
+                if (showDialog && typeDialog == DialogDeveloper.type) DeveloperContact(
                     onCloseAlert = { showDialog = false },
                     onSendMessage = { message ->
-                        imagesVM.sendMail(context,message,mailDeveloper)
+                        imagesVM.sendMail(context, message, mailDeveloper)
                     })
+                //Mostramos dialogo de Version
+                if (showDialog && typeDialog == DialogVersionInfo.type) VersionInfo(
+                    onCloseAlert = { showDialog = false })
             },
             bottomBar = {
                 BottomNavigationPrincipal(
@@ -372,6 +380,9 @@ fun ImagesScreen(
                     },
                     onShowDialog = { show ->
                         showDialog = show
+                    },
+                    typeDialog = { type ->
+                        typeDialog = type
                     })
             },
             //FAB
@@ -395,7 +406,6 @@ fun ImagesScreen(
         }
     }
 }
-
 
 
 @Composable

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aireadevs.megagifs.R
+import com.aireadevs.megagifs.core.Types.*
 
 /*****
  * Proyect: MegaGifs
@@ -32,7 +33,7 @@ import com.aireadevs.megagifs.R
  *****/
 
 @Composable
-fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit) {
+fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit, typeDialog: (Int) -> Unit) {
     Column {
         Box(
             modifier = Modifier
@@ -63,6 +64,7 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit) 
                     .clickable {
                         onCloseDrawer()
                         onShowDialog(true)
+                        typeDialog(DialogDeveloper.type)
                     },
                 color = Color.White,
                 fontFamily = FontFamily.Serif,
@@ -86,6 +88,8 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit) 
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable {
                         onCloseDrawer()
+                        onShowDialog(true)
+                        typeDialog(DialogVersionInfo.type)
                     },
                 color = Color.White,
                 fontFamily = FontFamily.Serif,

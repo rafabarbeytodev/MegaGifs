@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aireadevs.megagifs.BuildConfig.*
 import com.aireadevs.megagifs.core.MAIL_DEVELOPER
 import com.aireadevs.megagifs.data.datastore.DataStoreRepository
 import com.google.firebase.database.DataSnapshot
@@ -36,14 +37,12 @@ class MainViewModel @Inject constructor(
     private val _newVersion = MutableLiveData<Boolean>()
     val newVersion: LiveData<Boolean> = _newVersion
 
-
-
     fun checkVersion() {
 
         var versionCode: Long = 0
         var versionName = ""
-        val currentVersionCode = com.aireadevs.megagifs.BuildConfig.VERSION_CODE.toLong()
-        val currentVersionName = com.aireadevs.megagifs.BuildConfig.VERSION_NAME
+        val currentVersionCode = VERSION_CODE.toLong()
+        val currentVersionName = VERSION_NAME
 
         databaseReference = database.getReference("VERSION")
         databaseReference.addValueEventListener(object : ValueEventListener {
