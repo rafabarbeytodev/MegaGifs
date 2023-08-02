@@ -1,5 +1,7 @@
 package com.aireadevs.megagifs.screenimages.ui.components
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -34,6 +37,9 @@ import com.aireadevs.megagifs.core.Types.*
 
 @Composable
 fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit, typeDialog: (Int) -> Unit) {
+
+    val context = LocalContext.current
+
     Column {
         Box(
             modifier = Modifier
@@ -113,6 +119,10 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit, 
                     .padding(vertical = 8.dp, horizontal = 8.dp)
                     .clickable {
                         onCloseDrawer()
+                        val url = "https://aireadevs.tech/megagifs/privacy.php"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        context.startActivity(i)
                     },
                 color = Color.White,
                 fontFamily = FontFamily.Serif,
