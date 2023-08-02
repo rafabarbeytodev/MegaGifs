@@ -56,6 +56,7 @@ fun SplashScreen(navController: NavHostController) {
                 )
             )
         },
+        label = "",
     )
     {
         Splash()

@@ -90,7 +90,6 @@ fun SearchBarPrincipal(
             query = newQuery
         },
         onSearch = { textSearch ->
-            //itemsSearch.add(textSearch)
             query = textSearch
             active = true
             if (query.isNotEmpty()) {

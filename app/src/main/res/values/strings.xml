@@ -1,7 +1,20 @@
 <resources>
     <string name="app_name">MegaGifs</string>
-    <string name="text_alert_deprecated_version">La versión de la aplicación instalada en su terminal esta obsoleta, y es necesario que se actualice para poder usarla. Por favor, acceda a la PlayStore para su actualización.</string>
-    <string name="text_title_alert_deprecated_version">Nueva versión disponible</string>
-    <string name="text_btn_update_alert_deprecated_version">Actualizar</string>
-    <string name="text_title_btn_exit_alert_deprecated_version">Salir de la App</string>
+    <string name="text_alert_deprecated_version">The version of the application installed in your terminal is obsolete, and it is necessary to update it in order to use it. Please access the PlayStore for your update.</string>
+    <string name="text_title_alert_deprecated_version">New version available</string>
+    <string name="text_btn_update_alert_deprecated_version">Update</string>
+    <string name="text_title_btn_exit_alert_deprecated_version">Exit the app</string>
+    <string name="press_again_to_exit">Press again to exit</string>
+    <string name="gif_add_to_favorites">Gif add to favorites</string>
+    <string name="gif_delete_to_favorites">Gif delete to favorites</string>
+    <string name="favorite">Favorite</string>
+    <string name="could_not_retrieve_gif">Could not retrieve GIF</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
+    <string name="copied_url">Copied url</string>
+    <string name="copy">Copy</string>
+    <string name="close">Close</string>
+    <string name="powered_giphy">Powered_Giphy</string>
+    <string name="gif_saved_to_photos">GIF saved to Photos</string>
+    <string name="answer_and_solve_it_as_soon_as_possible">Describe the problem detected in the application to be able to answer and solve it as soon as possible.</string>
 </resources>

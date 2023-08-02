@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aireadevs.megagifs.R
 import com.aireadevs.megagifs.screendetails.domain.AddGifFavUseCase
 import com.aireadevs.megagifs.screendetails.domain.DeleteGifFavUseCase
 import com.aireadevs.megagifs.screenimages.ui.model.FavModel
@@ -107,7 +108,8 @@ class DetailsScreenViewModel @Inject constructor(
         }
 
         withContext(Dispatchers.Main) {
-            Toast.makeText(context, "GIF saved to Photos", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                R.string.gif_saved_to_photos, Toast.LENGTH_SHORT).show()
         }
     }
 

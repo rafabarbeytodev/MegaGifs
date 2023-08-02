@@ -79,6 +79,7 @@ fun AppNavigation(
                     navigationController,
                     arguments.getInt("type"),
                     arguments.getString("url").orEmpty(),
+                    arguments.getString("search").orEmpty(),
                     arguments.getString("avatar").orEmpty(),
                     arguments.getString("displayName").orEmpty(),
                     arguments.getString("userName").orEmpty(),

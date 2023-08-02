@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.aireadevs.megagifs.R
@@ -70,8 +71,7 @@ fun DeveloperContact(onCloseAlert: () -> Unit, onSendMessage: (String) -> Unit) 
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Describe the problem detected in the application to be able to " +
-                            "answer and solve it as soon as possible..",
+                    text = stringResource(R.string.answer_and_solve_it_as_soon_as_possible),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(

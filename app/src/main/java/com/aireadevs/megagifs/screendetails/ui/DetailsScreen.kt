@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -52,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
@@ -91,6 +91,7 @@ fun DetailsScreen(
     navController: NavHostController,
     typeResource: Int,
     url: String,
+    search: String,
     avatar: String,
     displayName: String,
     userName: String,
@@ -123,7 +124,7 @@ fun DetailsScreen(
     val launcherShareGif =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                Toast.makeText(context, "Compartido OK", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Shared OK", Toast.LENGTH_SHORT).show()
             }
             shareEnabled = true
         }
@@ -132,41 +133,15 @@ fun DetailsScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         }
 
-    /*val launcherScreenMultiplePermission =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        }*/
-
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
-
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // El permiso fue concedido
-            // Realiza las acciones necesarias aquí después de obtener el permiso
-
+            Toast.makeText(context, "Permission granted", Toast.LENGTH_SHORT).show()
         } else {
-            // El permiso fue denegado
-            // Realiza las acciones necesarias aquí cuando se deniega el permiso
+            Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
         }
     }
-
-    /* val requestMultiplePermissionLauncher = rememberLauncherForActivityResult(
-         contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-         // Verificar los resultados de los permisos solicitados
-         permissions.entries.forEach { entry ->
-             val permission = entry.key
-             val isGranted = entry.value
-             // Realizar acciones según el resultado del permiso
-             if (isGranted) {
-                 // Permiso concedido
-                 // Realizar alguna acción aquí
-             } else {
-                 // Permiso denegado
-                 // Realizar alguna acción aquí
-             }
-         }
-     }*/
-
     DialogPermission(
         showDialogPermission = showDialogPermission,
         onDismiss = { showDialogPermission = false },
@@ -174,7 +149,6 @@ fun DetailsScreen(
             if (firstTime) {
                 //solicitamos el permiso al usuario por primera vez
                 requestPermissionLauncher.launch(singlePermission)
-                //requestMultiplePermissionLauncher.launch(multiplePermission)
                 showDialogPermission = false
             } else {
                 //Enviamos al usuario a la pantalla de configuración de permisos de su  terminal
@@ -225,17 +199,16 @@ fun DetailsScreen(
                                     withContext(Dispatchers.Main) {
                                         Toast
                                             .makeText(
-                                                context,
-                                                "Gif add to favorites",
+                                                context, R.string.gif_add_to_favorites,
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
                                     }
                                 } else {
-                                    val search = imagesVM.onGetGifById(id)
+                                    val searching = imagesVM.onGetGifById(id)
                                     detailsVM.onDeleteFav(
                                         FavModel(
-                                            id_int = search.first().id_int,
+                                            id_int = searching.first().id_int,
                                             url = url,
                                             avatar_url = avatar,
                                             display_name = displayName,
@@ -250,7 +223,7 @@ fun DetailsScreen(
                                         Toast
                                             .makeText(
                                                 context,
-                                                "Gif delete to favorites",
+                                                R.string.gif_delete_to_favorites,
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
@@ -260,7 +233,7 @@ fun DetailsScreen(
                         },
                     tint = Color.Yellow,
                     imageVector = if (stateFavorite) Icons.Filled.Favorite else Icons.TwoTone.Favorite,
-                    contentDescription = "Favorite"
+                    contentDescription = stringResource(R.string.favorite)
                 )
                 Icon(
                     modifier = Modifier
@@ -284,7 +257,7 @@ fun DetailsScreen(
                                             Toast
                                                 .makeText(
                                                     context,
-                                                    "No se pudo recuperar el GIF",
+                                                    R.string.could_not_retrieve_gif,
                                                     Toast.LENGTH_SHORT
                                                 )
                                                 .show()
@@ -295,7 +268,7 @@ fun DetailsScreen(
                         },
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.Share,
-                    contentDescription = "Share"
+                    contentDescription = stringResource(R.string.share)
                 )
                 Icon(
                     modifier = Modifier
@@ -303,7 +276,6 @@ fun DetailsScreen(
                         .clickable {
                             coroutineScope.launch(Dispatchers.IO) {
                                 bytes = detailsVM.getGifBytesFromUrl(url)
-
                                 if (bytes != null) {
                                     singlePermission =
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -355,7 +327,7 @@ fun DetailsScreen(
                                         Toast
                                             .makeText(
                                                 context,
-                                                "No se pudo recuperar el GIF",
+                                                R.string.could_not_retrieve_gif,
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
@@ -365,7 +337,7 @@ fun DetailsScreen(
                         },
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.Download,
-                    contentDescription = "Download"
+                    contentDescription = stringResource(R.string.download)
                 )
 
                 Icon(
@@ -374,12 +346,15 @@ fun DetailsScreen(
                         .clickable {
                             detailsVM.copyToClipboard(context, url)
                             Toast
-                                .makeText(context, "Url copiada", Toast.LENGTH_SHORT)
+                                .makeText(
+                                    context,
+                                    R.string.copied_url, Toast.LENGTH_SHORT
+                                )
                                 .show()
                         },
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.CopyAll,
-                    contentDescription = "Copy"
+                    contentDescription = stringResource(R.string.copy)
                 )
             }
             Box(
@@ -390,23 +365,24 @@ fun DetailsScreen(
                 Icon(
                     modifier = Modifier
                         .clickable {
-                            Log.i("DEVELOPRAFA","Type recibido: $typeResource")
-                                when (typeResource) {
-                                    SearchGifs.type,
-                                    SearchStickers.type -> {
-                                        navController.navigate(
-                                            ImagesScreen.createRoute())
-                                        //Hay que ver como devolver la string buscada a la ImagesScreen
-                                    }
-                                    else -> {
-                                        navController.navigate(
-                                            ImagesScreen.createRoute())
-                                    }
+                            navController.popBackStack()
+                            when (typeResource) {
+                                SearchGifs.type,
+                                SearchStickers.type -> {
+                                    navController.navigate(
+                                        ImagesScreen.createRoute(search = search)
+                                    )
                                 }
+                                else -> {
+                                    navController.navigate(
+                                        ImagesScreen.createRoute()
+                                    )
+                                }
+                            }
                         },
                     tint = Color.Yellow,
                     imageVector = Icons.TwoTone.Close,
-                    contentDescription = "Close"
+                    contentDescription = stringResource(R.string.close)
                 )
             }
         }
@@ -470,7 +446,7 @@ fun DetailsScreen(
             }
             Image(
                 painter = painterResource(id = R.drawable.poweredby_logo),
-                contentDescription = "Powered_Giphy",
+                contentDescription = stringResource(R.string.powered_giphy),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(0.20f)
@@ -526,9 +502,9 @@ fun DetailsScreen(
                     result?.let {
                         items(it.data) { item ->
                             val positionImage =
-                                item.images.fixed_height.height.toInt() - item.images.fixed_height.width.toInt()
-                            val urlHorizontal =
-                                if (positionImage < 0) item.images.fixed_width.url else item.images.fixed_height.url
+                                item.images.fixedHeight.height.toInt() - item.images.fixedHeight.width.toInt()
+                            val urlHorizontal = item.images.downsizedLarge.url
+                            //val urlHorizontal = if (positionImage < 0) item.images.fixedWidth.url else item.images.fixedHeight.url
                             Card(
                                 elevation = 8.dp,
                                 shape = RoundedCornerShape(8.dp),
@@ -564,10 +540,11 @@ fun DetailsScreen(
                                                         DetailsScreen.createRoute(
                                                             type = typeResource,
                                                             url = urlHorizontal,
-                                                            avatar = item.user?.avatar_url.orEmpty(),
-                                                            displayName = item.user?.display_name.orEmpty(),
+                                                            search = search,
+                                                            avatar = item.user?.avatarUrl.orEmpty(),
+                                                            displayName = item.user?.displayName.orEmpty(),
                                                             userName = item.user?.username.orEmpty(),
-                                                            verified = item.user?.is_verified
+                                                            verified = item.user?.isVerified
                                                                 ?: false,
                                                             id = item.id,
                                                             stateFavorite = stateFavorite

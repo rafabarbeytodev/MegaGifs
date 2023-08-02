@@ -18,10 +18,11 @@ sealed class Routes(val route: String) {
     }
 
     object DetailsScreen :
-        Routes("detailsScreen?type={type}&url={url}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
+        Routes("detailsScreen?type={type}&url={url}&search={search}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
         fun createRoute(
             type: Int,
             url: String,
+            search:String,
             avatar: String,
             displayName: String,
             userName: String,
@@ -29,9 +30,7 @@ sealed class Routes(val route: String) {
             id: String,
             stateFavorite: Boolean
         ) =
-            "detailsScreen?type=$type&url=$url&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified&id=$id&stateFavorite=$stateFavorite"
+            "detailsScreen?type=$type&url=$url&search=$search&avatar=$avatar&displayName=$displayName&userName=$userName&verified=$verified&id=$id&stateFavorite=$stateFavorite"
     }
 
-    object FavoritesScreen :
-        Routes("favoritesScreen")
 }

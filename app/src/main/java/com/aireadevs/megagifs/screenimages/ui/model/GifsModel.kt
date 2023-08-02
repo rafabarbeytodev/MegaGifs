@@ -21,16 +21,19 @@ data class GifItem(
     @SerializedName("user") val user: GifUser? = null
 )
 
+
 data class GifUser(
-    @SerializedName("avatar_url") val avatar_url: String = "",
+    @SerializedName("avatar_url") val avatarUrl: String = "",
     @SerializedName("username") val username: String = "",
-    @SerializedName("display_name") val display_name: String = "",
-    @SerializedName("is_verified") val is_verified: Boolean = true
+    @SerializedName("display_name") val displayName: String = "",
+    @SerializedName("is_verified") val isVerified: Boolean = true
 )
 
 data class GifImages(
-    @SerializedName("fixed_height") val fixed_height: GifImage,
-    @SerializedName("fixed_width") val fixed_width: GifImage
+    @SerializedName("fixed_height") val fixedHeight: GifImage,
+    @SerializedName("fixed_width") val fixedWidth: GifImage,
+    @SerializedName("downsized_large") val downsizedLarge: GifImage,
+    @SerializedName("downsized_medium") val downsizedMedium: GifImage
 )
 
 data class GifImage(

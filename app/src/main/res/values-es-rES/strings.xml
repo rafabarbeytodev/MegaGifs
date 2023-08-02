@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MegaGifs</string>
+    <string name="text_alert_deprecated_version">La versión de la aplicación instalada en su terminal está obsoleta y es necesario actualizarla para poder utilizarla. Acceda a PlayStore para su actualización.</string>
+    <string name="text_title_alert_deprecated_version">Nueva versión disponible</string>
+    <string name="text_btn_update_alert_deprecated_version">Actualizar</string>
+    <string name="text_title_btn_exit_alert_deprecated_version">Salir de la aplicación</string>
+    <string name="press_again_to_exit">Presiona de nuevo para salir</string>
+    <string name="gif_add_to_favorites">Gif añadido a favoritos</string>
+    <string name="gif_delete_to_favorites">Gif borrado de favoritos</string>
+    <string name="favorite">Favorito</string>
+    <string name="could_not_retrieve_gif">No se pudo recuperar el gif</string>
+    <string name="share">Compartir</string>
+    <string name="download">Descrgar</string>
+    <string name="copied_url">Url copiada</string>
+    <string name="copy">Copiar</string>
+    <string name="close">Cerrar</string>
+    <string name="powered_giphy">Powered_Giphy</string>
+    <string name="gif_saved_to_photos">GIF salvado en Fotos</string>
+    <string name="answer_and_solve_it_as_soon_as_possible">Describir el problema detectado en la aplicación para poder dar respuesta y solucionarlo a la mayor brevedad.</string>
+</resources>

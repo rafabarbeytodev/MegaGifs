@@ -240,12 +240,8 @@ fun ImagesScreen(
                                 result?.let {
                                     items(it.data) { item ->
                                         val positionImage =
-                                            item.images.fixed_height.height.toInt() - item.images.fixed_height.width.toInt()
-                                        val url: String = if (positionImage < 0) {
-                                            item.images.fixed_width.url
-                                        } else {
-                                            item.images.fixed_height.url
-                                        }
+                                            item.images.fixedHeight.height.toInt() - item.images.fixedHeight.width.toInt()
+                                        val url: String = item.images.downsizedLarge.url
                                         Card(
                                             elevation = 8.dp,
                                             shape = RoundedCornerShape(8.dp),
@@ -262,6 +258,7 @@ fun ImagesScreen(
                                                         else Color.Transparent
                                                     )
                                                     .clickable {
+                                                        navController.popBackStack()
                                                         var isFavorite = false
                                                         coroutineScope.launch(Dispatchers.IO) {
                                                             val deferred = listOf(
@@ -279,10 +276,11 @@ fun ImagesScreen(
                                                                     Routes.DetailsScreen.createRoute(
                                                                         type = typeImage,
                                                                         url = url,
-                                                                        avatar = item.user?.avatar_url.orEmpty(),
-                                                                        displayName = item.user?.display_name.orEmpty(),
+                                                                        search = search,
+                                                                        avatar = item.user?.avatarUrl.orEmpty(),
+                                                                        displayName = item.user?.displayName.orEmpty(),
                                                                         userName = item.user?.username.orEmpty(),
-                                                                        verified = item.user?.is_verified
+                                                                        verified = item.user?.isVerified
                                                                             ?: false,
                                                                         id = item.id,
                                                                         stateFavorite = stateFavorite
@@ -320,6 +318,7 @@ fun ImagesScreen(
                                                             Routes.DetailsScreen.createRoute(
                                                                 type = typeImage,
                                                                 url = url,
+                                                                search = search,
                                                                 avatar = item.avatar_url,
                                                                 displayName = item.display_name,
                                                                 userName = item.username,

@@ -58,8 +58,10 @@ class GifsRepository @Inject constructor(
     }
     private fun com.aireadevs.megagifs.screenimages.data.retrofit.entity.GifImages.mapToGifImages(): GifImages {
         return GifImages(
-            fixed_height = fixed_height.mapToGifImage(),
-            fixed_width = fixed_width.mapToGifImage()
+            fixedHeight = fixedHeight.mapToGifImage(),
+            fixedWidth = fixedWidth.mapToGifImage(),
+            downsizedLarge = downsizedLarge.mapToGifImage(),
+            downsizedMedium = downsizedMedium.mapToGifImage()
         )
     }
     private fun com.aireadevs.megagifs.screenimages.data.retrofit.entity.GifImage.mapToGifImage(): GifImage {
@@ -72,10 +74,10 @@ class GifsRepository @Inject constructor(
     }
     private fun com.aireadevs.megagifs.screenimages.data.retrofit.entity.GifUser.mapToGifUser(): GifUser {
         return GifUser(
-            avatar_url = avatar_url,
+            avatarUrl = avatarUrl,
             username = username,
-            display_name = display_name,
-            is_verified = is_verified
+            displayName = displayName,
+            isVerified = isVerified
         )
     }
 }
