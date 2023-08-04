@@ -1,6 +1,7 @@
 package com.aireadevs.megagifs.screenimages.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -21,9 +23,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.aireadevs.megagifs.R
 import com.aireadevs.megagifs.core.Routes
 import com.aireadevs.megagifs.core.Types.*
 import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
@@ -85,7 +89,18 @@ fun SearchBarPrincipal(
             }
         },
         shape = SearchBarDefaults.fullScreenShape,
-        placeholder = { Text(text = "Search", fontSize = 18.sp) },
+        placeholder = {
+            if (!active) {
+                Row {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "search",
+                        tint = Color.Black
+                    )
+                    Text(text = stringResource(R.string.search), fontSize = 18.sp)
+                }
+            }
+        },
         onQueryChange = { newQuery ->
             query = newQuery
         },
