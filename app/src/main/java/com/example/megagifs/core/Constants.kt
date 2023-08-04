@@ -12,4 +12,4 @@ package com.example.megagifs.core
 
 const val TAG = "DEVELOPRAFA"
 
-const val API_KEY = "ZCwXdskKJKjq3cMU3Yihc73t5eQNnsHk"
+const val API_KEY = "YYYYYYYYYYYYYYYYYYYYYYYYY"
