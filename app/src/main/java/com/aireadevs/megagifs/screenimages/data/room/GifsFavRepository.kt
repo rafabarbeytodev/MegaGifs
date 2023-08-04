@@ -25,10 +25,10 @@ class GifsFavRepository @Inject constructor(
                 entity.id,
                 entity.url,
                 entity.type,
-                entity.avatar_url,
-                entity.display_name,
+                entity.avatarUrl,
+                entity.displayName,
                 entity.username,
-                entity.is_verified
+                entity.isVerified
             )
         }
     }

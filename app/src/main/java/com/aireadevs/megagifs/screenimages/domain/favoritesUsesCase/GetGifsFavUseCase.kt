@@ -17,7 +17,6 @@ import javax.inject.Inject
 class GetGifsFavUseCase @Inject constructor(
     private val repository: GifsFavRepository
 ) {
-    //operator fun invoke(): List<FavModel> = repository.gifsFav
     suspend operator fun invoke(): List<FavModel> = repository.onGetAllFavs()
 }
 

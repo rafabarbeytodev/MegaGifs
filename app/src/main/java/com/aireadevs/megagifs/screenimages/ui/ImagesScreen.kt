@@ -144,101 +144,81 @@ fun ImagesScreen(
                             ProgressBarPrincipal()
                     }
                     Column {
-                        LazyVerticalGrid(
-                            modifier = Modifier
-                                .padding(
-                                    bottom = it.calculateBottomPadding(),
-                                    start = 8.dp,
-                                    end = 8.dp
-                                ),
-                            state = rvState,
-                            columns = if (typeImage != Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(
-                                4
-                            )
-                        ) {
-                            when (typeImage) {
-                                Gifs.type -> {
-                                    if (firstTime) {
-                                        coroutineScope.launch {
-                                            imagesVM.onShowProgress(true)
-                                            val deferred = listOf(
-                                                async {
+                        if (typeImage != Favorites.type) {
+                            //Mostramos el RV de los gifs
+                            LazyVerticalGrid(
+                                modifier = Modifier
+                                    .padding(
+                                        bottom = it.calculateBottomPadding(),
+                                        start = 8.dp,
+                                        end = 8.dp
+                                    ),
+                                state = rvState,
+                                columns = if (typeImage != Emojis.type) GridCells.Fixed(3) else GridCells.Fixed(
+                                    4
+                                )
+                            ) {
+                                //Capturamos los datos
+                                coroutineScope.launch {
+                                    if (firstTime) imagesVM.onShowProgress(true)
+                                    val deferred = listOf(
+                                        async {
+                                            when (typeImage) {
+                                                Gifs.type -> {
                                                     imagesVM.onGetGifs()
                                                     imagesVM.onGetGifsFav()
                                                 }
-                                            )
-                                            deferred.awaitAll()
-                                            imagesVM.onShowProgress(false)
+
+                                                Stickers.type -> {
+                                                    imagesVM.onGetStickers()
+                                                    imagesVM.onGetGifsFav()
+                                                }
+
+                                                Emojis.type -> {
+                                                    imagesVM.onGetEmojis()
+                                                    imagesVM.onGetGifsFav()
+                                                }
+
+                                                SearchGifs.type -> {
+                                                    imagesVM.onGetSearchGifs(search)
+                                                    imagesVM.onGetGifsFav()
+                                                }
+
+                                                SearchStickers.type -> {
+                                                    imagesVM.onGetSearchStickers(search)
+                                                    imagesVM.onGetGifsFav()
+                                                }
+                                            }
                                         }
-                                        firstTime = false
-                                    }
-                                    result = resultGifs
+                                    )
+                                    deferred.awaitAll()
+                                    imagesVM.onShowProgress(false)
+                                    firstTime = false
                                 }
-
-                                Stickers.type -> {
-                                    coroutineScope.launch {
-                                        if (firstTime)
-                                            imagesVM.onShowProgress(true)
-                                        imagesVM.onGetStickers()
-                                        imagesVM.onGetGifsFav()
-                                        imagesVM.onShowProgress(false)
-                                        firstTime = false
+                                when (typeImage) {
+                                    Gifs.type -> {
+                                        result = resultGifs
                                     }
-                                    result = resultStickers
-                                }
 
-                                Emojis.type -> {
-                                    coroutineScope.launch {
-                                        if (firstTime)
-                                            imagesVM.onShowProgress(true)
-                                        imagesVM.onGetEmojis()
-                                        imagesVM.onGetGifsFav()
-                                        imagesVM.onShowProgress(false)
-                                        firstTime = false
+                                    Stickers.type -> {
+                                        result = resultStickers
                                     }
-                                    result = resultEmojis
-                                }
 
-                                Favorites.type -> {
-                                    coroutineScope.launch {
-                                        if (firstTime)
-                                            imagesVM.onShowProgress(true)
-                                        imagesVM.onGetGifsFav()
-                                        imagesVM.onShowProgress(false)
-                                        firstTime = false
+                                    Emojis.type -> {
+                                        result = resultEmojis
                                     }
-                                    resultFav = resultGifsFav
 
-                                }
-
-                                SearchGifs.type -> {
-                                    coroutineScope.launch {
-                                        if (firstTime)
-                                            imagesVM.onShowProgress(true)
-                                        imagesVM.onGetSearchGifs(search)
-                                        imagesVM.onGetGifsFav()
-                                        imagesVM.onShowProgress(false)
-                                        firstTime = false
+                                    SearchGifs.type -> {
+                                        result = resultSearchGifs
                                     }
-                                    result = resultSearchGifs
-                                }
 
-                                SearchStickers.type -> {
-                                    coroutineScope.launch {
-                                        if (firstTime)
-                                            imagesVM.onShowProgress(true)
-                                        imagesVM.onGetSearchStickers(search)
-                                        imagesVM.onGetGifsFav()
-                                        imagesVM.onShowProgress(false)
-                                        firstTime = false
+                                    SearchStickers.type -> {
+                                        result = resultSearchStickers
                                     }
-                                    result = resultSearchStickers
                                 }
-
-                            }
-                            if (typeImage != Favorites.type) {
-                                result?.let {
-                                    items(it.data) { item ->
+                                //Mostramos los datos capturados
+                                result?.let { gifs ->
+                                    items(gifs.data) { item ->
                                         val positionImage =
                                             item.images.fixedHeight.height.toInt() - item.images.fixedHeight.width.toInt()
                                         val url: String = item.images.downsizedLarge.url
@@ -292,9 +272,34 @@ fun ImagesScreen(
                                         }
                                     }
                                 }
-                            } else {
-                                resultFav?.let {
-                                    items(it) { item ->
+                            }
+                        } else {
+                            //Mostramos el RV de los favoritos
+                            LazyVerticalGrid(
+                                modifier = Modifier
+                                    .padding(
+                                        bottom = it.calculateBottomPadding(),
+                                        start = 8.dp,
+                                        end = 8.dp
+                                    ),
+                                state = rvState,
+                                columns = GridCells.Fixed(count = 4)
+                            ) {
+                                //Capturamos los datos
+                                coroutineScope.launch {
+                                    if (firstTime) imagesVM.onShowProgress(true)
+                                    val deferred = listOf(
+                                        async {
+                                            imagesVM.onGetGifsFav()
+                                        }
+                                    )
+                                    deferred.awaitAll()
+                                    imagesVM.onShowProgress(false)
+                                    firstTime = false
+                                }
+                                resultFav = resultGifsFav
+                                resultFav?.let { favorites ->
+                                    items(favorites) { item ->
                                         val positionImage = 1
                                         val url = item.url
                                         Card(

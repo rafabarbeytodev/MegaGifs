@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase
  *
  * All rights reserved 2023.
  *****/
-@Database(entities = [GifsFavEntity::class], version = 2)
+@Database(entities = [GifsFavEntity::class], version = 3)
 abstract class GifsFavDatabase: RoomDatabase() {
     abstract fun gifFavDao(): GifsFavDao
 }

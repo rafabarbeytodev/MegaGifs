@@ -25,8 +25,8 @@ data class GifsFavEntity(
     @SerializedName("id") val id: String = "",
     @SerializedName("url") val url: String,
     @SerializedName("type") val type: Int,
-    @SerializedName("avatar_url") val avatar_url: String,
-    @SerializedName("display_name") val display_name: String,
+    @SerializedName("avatar_url") val avatarUrl: String,
+    @SerializedName("display_name") val displayName: String,
     @SerializedName("username") val username: String,
-    @SerializedName("is_verified") val is_verified: Boolean,
+    @SerializedName("is_verified") val isVerified: Boolean,
 )
