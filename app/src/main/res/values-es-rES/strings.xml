@@ -18,4 +18,5 @@
     <string name="powered_giphy">Powered_Giphy</string>
     <string name="gif_saved_to_photos">GIF salvado en Fotos</string>
     <string name="answer_and_solve_it_as_soon_as_possible">Describir el problema detectado en la aplicación para poder dar respuesta y solucionarlo a la mayor brevedad.</string>
+    <string name="search">Busqueda</string>
 </resources>
