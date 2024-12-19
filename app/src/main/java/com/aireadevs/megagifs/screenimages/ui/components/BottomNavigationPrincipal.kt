@@ -9,8 +9,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
@@ -18,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aireadevs.megagifs.R
-import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
 
 /*****
  * Proyect: MegaGifs
@@ -31,17 +29,12 @@ import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
  *****/
 
 @Composable
-fun BottomNavigationPrincipal(
-    imagesVM: ImagesScreenViewModel
-) {
-
+fun BottomNavigationPrincipal(typeImage: Int, onTypeImage: (Int) -> Unit) {
     val context = LocalContext.current
 
     var selectedItem by rememberSaveable {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
-
-    val typeImage by imagesVM.typeImage.observeAsState(initial = 0)
 
     val items = listOf("Gifs", "Stickers", "Emojis", "Favorites")
     val icons =
@@ -58,13 +51,13 @@ fun BottomNavigationPrincipal(
                         Icon(
                             painter = painterResource(id = icons[index]),
                             contentDescription = item,
-                            tint = if(typeImage == index) Color.Black else Color.Yellow
+                            tint = if (typeImage == index) Color.Black else Color.Yellow
                         )
                     },
                     label = { Text(text = item, color = Color.Yellow) },
                     onClick = {
                         clearCache(context = context)
-                        imagesVM.onTypeImage(index)
+                        onTypeImage(index)
                         selectedItem = index
                     },
                     alwaysShowLabel = false,

@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aireadevs.megagifs.BuildConfig.*
+import com.aireadevs.megagifs.BuildConfig.VERSION_CODE
+import com.aireadevs.megagifs.BuildConfig.VERSION_NAME
 import com.aireadevs.megagifs.core.MAIL_DEVELOPER
 import com.aireadevs.megagifs.data.datastore.DataStoreRepository
 import com.google.firebase.database.DataSnapshot
@@ -14,7 +15,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /*****
@@ -36,6 +39,9 @@ class MainViewModel @Inject constructor(
 
     private val _newVersion = MutableLiveData<Boolean>()
     val newVersion: LiveData<Boolean> = _newVersion
+
+    private val _mailDeveloper = MutableLiveData<String>()
+    val mailDeveloper: LiveData<String> = _mailDeveloper
 
     fun checkVersion() {
 
@@ -76,6 +82,18 @@ class MainViewModel @Inject constructor(
                 Log.i("DEVELOPRAFA", "Error acceso a REALTIME Database : ${error.message}")
             }
         })
+    }
+
+    fun getMailDeveloper(){
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStore.getDataStore().collect{
+                withContext(Dispatchers.Main){
+                    if (it != null) {
+                        _mailDeveloper.value = it.mailDeveloper
+                    }
+                }
+            }
+        }
     }
     fun checkMailDeveloper() {
         databaseReference = database.getReference("CONTACT")

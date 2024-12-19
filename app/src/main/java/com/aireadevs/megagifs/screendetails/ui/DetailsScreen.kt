@@ -60,14 +60,19 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.aireadevs.megagifs.R
-import com.aireadevs.megagifs.core.Routes.*
-import com.aireadevs.megagifs.core.Types.*
+import com.aireadevs.megagifs.core.Routes.DetailsScreen
+import com.aireadevs.megagifs.core.Routes.ImagesScreen
+import com.aireadevs.megagifs.core.Types.Favorites
+import com.aireadevs.megagifs.core.Types.Gifs
+import com.aireadevs.megagifs.core.Types.SearchGifs
+import com.aireadevs.megagifs.core.Types.SearchStickers
+import com.aireadevs.megagifs.core.Types.Stickers
 import com.aireadevs.megagifs.screendetails.ui.components.DialogPermission
-import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
-import com.aireadevs.megagifs.ui.components.BannerAdView
 import com.aireadevs.megagifs.screenimages.ui.components.ProgressBarPrincipal
+import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import com.aireadevs.megagifs.screenimages.ui.model.GifsModel
+import com.aireadevs.megagifs.ui.components.BannerAdView
 import com.aireadevs.megagifs.ui.components.GifImageGlide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -90,6 +95,7 @@ import kotlinx.coroutines.withContext
 fun DetailsScreen(
     navController: NavHostController,
     typeResource: Int,
+    typeFav: Int,
     url: String,
     search: String,
     avatar: String,
@@ -142,6 +148,7 @@ fun DetailsScreen(
             Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
         }
     }
+
     DialogPermission(
         showDialogPermission = showDialogPermission,
         onDismiss = { showDialogPermission = false },
@@ -160,7 +167,6 @@ fun DetailsScreen(
                 showDialogPermission = false
             }
         })
-
     Column(
         modifier = Modifier
             .background(Color.Black)
@@ -496,6 +502,32 @@ fun DetailsScreen(
                                 firstTime = false
                             }
                             result = resultSearchStickers
+                        }
+                        Favorites.type ->{
+                            when(typeFav){
+                                Gifs.type->{
+                                    coroutineScope.launch {
+                                        if (firstTime)
+                                            imagesVM.onShowProgress(true)
+                                        imagesVM.onGetSearchGifs(userName)
+                                        imagesVM.onGetGifsFav()
+                                        imagesVM.onShowProgress(false)
+                                        firstTime = false
+                                    }
+                                    result = resultSearchGifs
+                                }
+                                Stickers.type->{
+                                    coroutineScope.launch {
+                                        if (firstTime)
+                                            imagesVM.onShowProgress(true)
+                                        imagesVM.onGetSearchStickers(userName)
+                                        imagesVM.onGetGifsFav()
+                                        imagesVM.onShowProgress(false)
+                                        firstTime = false
+                                    }
+                                    result = resultSearchStickers
+                                }
+                            }
                         }
                     }
 

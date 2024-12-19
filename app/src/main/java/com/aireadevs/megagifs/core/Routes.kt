@@ -11,14 +11,13 @@ package com.aireadevs.megagifs.core
  *****/
 sealed class Routes(val route: String) {
 
-    object SplashScreen : Routes("splashscreen")
-    object ImagesScreen : Routes("imagesScreen?search={search}") {
+    data object ImagesScreen : Routes("imagesScreen?search={search}") {
         fun createRoute(search: String = "") =
             "imagesScreen?search=$search"
     }
 
-    object DetailsScreen :
-        Routes("detailsScreen?type={type}&url={url}&search={search}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
+    data object DetailsScreen :
+        Routes("detailsScreen?type={type}&typeFav={typeFav}&url={url}&search={search}&avatar={avatar}&displayName={displayName}&userName={userName}&verified={verified}&id={id}&stateFavorite={stateFavorite}") {
         fun createRoute(
             type: Int,
             url: String,

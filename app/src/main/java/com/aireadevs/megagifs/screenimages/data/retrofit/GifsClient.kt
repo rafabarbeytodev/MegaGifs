@@ -22,7 +22,7 @@ interface GifsClient {
     @GET("/v1/stickers/trending?api_key=$API_KEY_GIPHY&limit&random_id&offset&rating&bundle")
     suspend fun getTrendingStickers(): Response<GifsEntity>
 
-    @GET("/v2/emoji?api_key=$API_KEY_GIPHY&limit=500&offset")
+    @GET("/v2/emoji?api_key=$API_KEY_GIPHY&limit=100&offset=0")
     suspend fun getTrendingEmojis(): Response<GifsEntity>
 
     @GET("/v1/gifs/search?api_key=$API_KEY_GIPHY")

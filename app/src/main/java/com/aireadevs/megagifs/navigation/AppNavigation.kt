@@ -16,7 +16,7 @@ import com.aireadevs.megagifs.screendetails.ui.DetailsScreen
 import com.aireadevs.megagifs.screendetails.ui.DetailsScreenViewModel
 import com.aireadevs.megagifs.screenimages.ui.ImagesScreen
 import com.aireadevs.megagifs.screenimages.ui.ImagesScreenViewModel
-import com.aireadevs.megagifs.screensplash.ui.SplashScreen
+import com.aireadevs.megagifs.ui.MainViewModel
 
 /*****
  * Proyect: MegaGifs
@@ -30,6 +30,7 @@ import com.aireadevs.megagifs.screensplash.ui.SplashScreen
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun AppNavigation(
+    mainVM: MainViewModel,
     imagesVM: ImagesScreenViewModel,
     detailsVM: DetailsScreenViewModel
 ) {
@@ -37,13 +38,12 @@ fun AppNavigation(
     var stateFavorite by remember { mutableStateOf(false) }
 
     val navigationController = rememberNavController()
+
     NavHost(
         navController = navigationController,
-        startDestination = Routes.SplashScreen.route
+        //startDestination = Routes.SplashScreen.route
+        startDestination = Routes.ImagesScreen.route
     ) {
-        composable(Routes.SplashScreen.route) {
-            SplashScreen(navigationController)
-        }
 
         composable(
             Routes.ImagesScreen.route,
@@ -54,6 +54,7 @@ fun AppNavigation(
                 ImagesScreen(
                     navigationController,
                     arguments.getString("search").orEmpty(),
+                    mainVM,
                     imagesVM,
                     stateFavorite
                 ) { state ->
@@ -67,6 +68,7 @@ fun AppNavigation(
             arguments = listOf(
                 navArgument("url") { defaultValue = "" },
                 navArgument("type") { defaultValue = 0 },
+                navArgument("typeFav") { defaultValue = 0 },
                 navArgument("avatar") { defaultValue = "" },
                 navArgument("displayName") { defaultValue = "" },
                 navArgument("userName") { defaultValue = "" },
@@ -78,6 +80,7 @@ fun AppNavigation(
                 DetailsScreen(
                     navigationController,
                     arguments.getInt("type"),
+                    arguments.getInt("typeFav"),
                     arguments.getString("url").orEmpty(),
                     arguments.getString("search").orEmpty(),
                     arguments.getString("avatar").orEmpty(),

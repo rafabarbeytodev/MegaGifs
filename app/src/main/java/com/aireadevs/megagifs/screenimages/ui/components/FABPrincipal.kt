@@ -1,11 +1,7 @@
 package com.aireadevs.megagifs.screenimages.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.VerticalAlignTop
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Text
@@ -14,9 +10,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 
 /*****
@@ -33,6 +27,7 @@ import kotlinx.coroutines.launch
 fun FabPrincipal(rvState: LazyGridState) {
 
     val coroutineScope = rememberCoroutineScope()
+
     val expandedFab by remember {
         derivedStateOf {
             rvState.firstVisibleItemIndex == 0
@@ -51,15 +46,4 @@ fun FabPrincipal(rvState: LazyGridState) {
         contentColor = Color.Yellow,
         containerColor = Color.DarkGray
     )
-
-
-//    FloatingActionButton(onClick = {
-//        coroutineScope.launch {
-//            rvState.animateScrollToItem(0)
-//        }
-//    }, backgroundColor = Color.DarkGray, contentColor = Color.Yellow) {
-//        Icon(imageVector = Icons.Filled.VerticalAlignTop, contentDescription = "up")
-//    }
-
-
 }

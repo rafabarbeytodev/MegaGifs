@@ -2,6 +2,7 @@ package com.aireadevs.megagifs.screenimages.ui
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -44,24 +45,25 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import com.aireadevs.megagifs.core.Routes
 import com.aireadevs.megagifs.core.Types.*
-import com.aireadevs.megagifs.screenimages.ui.components.DeveloperContact
-import com.aireadevs.megagifs.screenimages.ui.model.FavModel
-import com.aireadevs.megagifs.ui.components.BannerAdView
 import com.aireadevs.megagifs.screenimages.ui.components.BottomNavigationPrincipal
+import com.aireadevs.megagifs.screenimages.ui.components.DeveloperContact
 import com.aireadevs.megagifs.screenimages.ui.components.DrawerPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.FabPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.ProgressBarPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.SearchBarPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.VersionInfo
+import com.aireadevs.megagifs.screenimages.ui.model.FavModel
 import com.aireadevs.megagifs.screenimages.ui.model.GifsModel
+import com.aireadevs.megagifs.ui.MainViewModel
+import com.aireadevs.megagifs.ui.components.BannerAdView
 import com.aireadevs.megagifs.ui.components.GifImageGlide
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /*****
@@ -80,6 +82,7 @@ import kotlinx.coroutines.withContext
 fun ImagesScreen(
     navController: NavHostController,
     search: String,
+    mainVM: MainViewModel,
     imagesVM: ImagesScreenViewModel,
     stateFavorite: Boolean,
     onFavoriteChange: (Boolean) -> Unit
@@ -117,7 +120,7 @@ fun ImagesScreen(
     val showProgress by imagesVM.showProgress.observeAsState(initial = false)
     val typeImage by imagesVM.typeImage.observeAsState(initial = 0)
 
-    val mailDeveloper by imagesVM.mailDeveloper.observeAsState(initial = "")
+    val mailDeveloper by mainVM.mailDeveloper.observeAsState(initial = "")
 
     Column {
         Scaffold(
@@ -128,11 +131,36 @@ fun ImagesScreen(
                 Column {
                     if (typeImage != Emojis.type && typeImage != Favorites.type) {
                         SearchBarPrincipal(
+                            typeImage,
                             onClickDrawer = {
                                 coroutineScope.launch {
                                     scaffoldState.drawerState.open()
                                 }
-                            }, typeImage, imagesVM, navController
+                            },
+                            onTypeImage = { typeImage ->
+                                imagesVM.onTypeImage(typeImage)
+                            },
+                            onGetSearchGifs = { query ->
+                                coroutineScope.launch {
+                                    val deferred = listOf(
+                                        async {
+                                            imagesVM.onGetSearchGifs(query)
+                                        }
+                                    )
+                                    deferred.awaitAll()
+                                }
+                            },
+                            onGetSearchStickers = { query ->
+                                coroutineScope.launch {
+                                    val deferred = listOf(
+                                        async {
+                                            imagesVM.onGetSearchStickers(query)
+                                        }
+                                    )
+                                    deferred.awaitAll()
+                                }
+                            },
+                            navController
                         )
                     }
                 }
@@ -319,6 +347,7 @@ fun ImagesScreen(
                                                         // y evidentemente son favoritos, pero en otras situaciones habrá que comprobarlo
                                                         onFavoriteChange(!isFavorite)
                                                         navController.popBackStack()
+                                                        Log.i("DEVELOPRAFA", "FAV: $item")
                                                         navController.navigate(
                                                             Routes.DetailsScreen.createRoute(
                                                                 type = typeImage,
@@ -369,7 +398,10 @@ fun ImagesScreen(
             },
             bottomBar = {
                 BottomNavigationPrincipal(
-                    imagesVM
+                    typeImage,
+                    onTypeImage = { typeImage ->
+                        imagesVM.onTypeImage(typeImage)
+                    }
                 )
             },
             //Drawer
@@ -400,12 +432,7 @@ fun ImagesScreen(
                 .background(Color.Black)
                 .height(8.dp)
         )
-        Box(
-            modifier = Modifier
-                .background(Color.LightGray)
-                .height(62.dp),
-            contentAlignment = Alignment.Center
-        ) {
+        Box {
             BannerAdView()
         }
     }
