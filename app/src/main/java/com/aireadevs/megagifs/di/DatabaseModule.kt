@@ -36,7 +36,7 @@ class DatabaseModule {
             appContext,
             GifsFavDatabase::class.java,
             "GifsFav")
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(false)
             .build()
     }
 }

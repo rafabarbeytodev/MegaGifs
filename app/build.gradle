@@ -1,134 +1,163 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
-    id 'dagger.hilt.android.plugin'
-    id 'com.google.devtools.ksp'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.com.google.services)
+    alias(libs.plugins.com.google.crashlytics)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
 }
 
 android {
-    namespace 'com.aireadevs.megagifs'
-    compileSdk 34
+    namespace = "com.aireadevs.megagifs"
+    compileSdk = 36
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 
     defaultConfig {
-        applicationId "com.aireadevs.megagifs"
-        minSdk 28
-        targetSdk 34
-        versionCode 13
-        versionName "Piscis 1.13"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId = "com.aireadevs.megagifs"
+        minSdk = 28
+        targetSdk = 36
+        versionCode = 14
+        versionName = "Piscis 1.14"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
         }
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
     buildTypes {
         debug {
-            shrinkResources false
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources = false
+            minifyEnabled =  false
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
         release {
-            shrinkResources true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            shrinkResources = true
+            minifyEnabled = true
+            proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    kotlin{
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
     }
     buildFeatures {
-        compose true
-        buildConfig true
+        compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.1'
+        kotlinCompilerExtensionVersion = '1.5.1'
     }
-    packagingOptions {
+    packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    kotlin{
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
     }
 
 }
 
 dependencies {
 
-    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.9.20')
+    implementation (platform(libs.kotlin.bom))
+    implementation (libs.androidx.core.ktx)
 
-    implementation 'androidx.core:core-splashscreen:1.0.1'
+    implementation (libs.androidx.core.splashscreen)
 
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.compose.material:material'
-    implementation 'androidx.compose.ui:ui:1.7.6'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.ui:ui-tooling'
-    implementation 'androidx.compose.material:material-icons-core:1.7.6'
-    implementation 'androidx.compose.material:material-icons-extended:1.7.6'
-    implementation 'androidx.compose.material3:material3-window-size-class:1.3.1'
-    implementation 'androidx.activity:activity-compose:1.9.3'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.7'
-    implementation 'androidx.compose.runtime:runtime-livedata:1.7.6'
-    implementation 'androidx.navigation:navigation-compose:2.8.5'
+    implementation libs.glide
 
-    implementation "com.github.bumptech.glide:glide:4.14.2"
-    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
+    ksp libs.androidx.room.compiler
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.room.runtime
 
-    implementation "com.google.accompanist:accompanist-permissions:0.19.0"
+    ksp libs.hilt.compiler
+    implementation libs.hilt.android
+    implementation libs.hilt.navigation
 
-    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation libs.androidx.appcompat
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation (libs.androidx.compose.material3)
+    implementation (libs.androidx.compose.material)
+    implementation libs.androidx.compose.material.icons.core
+    implementation (libs.androidx.material.icons.extended)
+    implementation libs.androidx.compose.material3.window.size.class1
+    implementation libs.material
+    implementation libs.compose.material
 
-    implementation "androidx.room:room-ktx:2.6.1"
-    implementation "androidx.room:room-runtime:2.6.1"
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
-    implementation platform('androidx.compose:compose-bom:2024.12.01')
-    implementation 'androidx.wear.compose:compose-material:1.4.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-compose-android:2.8.7'
-    ksp 'androidx.room:room-compiler:2.6.1'
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.ui.graphics
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.ui.tooling
+    implementation libs.androidx.activity.compose.v193
+    implementation libs.compose
 
-    implementation "com.google.dagger:hilt-android:2.49"
-    ksp "com.google.dagger:hilt-android-compiler:2.49"
+    implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.lifecycle.runtime.ktx.v287
+    implementation libs.androidx.compose.runtime.livedata
+    implementation libs.androidx.navigation.compose.v285
 
-    implementation 'com.google.android.gms:play-services-drive:17.0.0'
+    implementation libs.accompanist.permissions
+
+    implementation libs.okhttp
+
+    implementation libs.retrofit
+    implementation libs.converter.gson
+
+    implementation libs.androidx.constraintlayout
+    implementation platform(libs.androidx.compose.bom)
+
+    implementation libs.androidx.lifecycle.runtime.compose.android
+    implementation libs.play.services.drive
 
     //Admon
-    implementation 'com.google.android.gms:play-services-ads:22.2.0'
+    implementation libs.play.services.ads
 
     //Firebase
-    implementation 'com.google.firebase:firebase-database-ktx:21.0.0'
-    implementation 'com.google.firebase:firebase-analytics-ktx:22.1.2'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:19.3.0'
+    implementation libs.firebase.database.ktx
+    implementation libs.firebase.analytics.ktx
+    implementation libs.firebase.crashlytics.ktx
 
     //Datastore
-    implementation "androidx.datastore:datastore-preferences:1.1.1"
+    implementation libs.androidx.datastore.preferences
 
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.12.01')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit.v121
+    androidTestImplementation libs.androidx.espresso.core.v361
+    androidTestImplementation platform(libs.compose)
+    androidTestImplementation libs.androidx.compose.ui.test.junit4
+    debugImplementation libs.ui.tooling
+    debugImplementation libs.androidx.compose.ui.test.manifest
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
