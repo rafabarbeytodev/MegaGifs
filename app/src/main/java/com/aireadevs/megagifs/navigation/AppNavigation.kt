@@ -41,7 +41,6 @@ fun AppNavigation(
 
     NavHost(
         navController = navigationController,
-        //startDestination = Routes.SplashScreen.route
         startDestination = Routes.ImagesScreen.route
     ) {
 

@@ -194,10 +194,10 @@ fun DetailsScreen(
                                     detailsVM.onAddFav(
                                         FavModel(
                                             url = url,
-                                            avatar_url = avatar,
-                                            display_name = displayName,
+                                            avatarUrl = avatar,
+                                            displayName = displayName,
                                             username = userName,
-                                            is_verified = verified,
+                                            isVerified = verified,
                                             type = typeResource,
                                             id = id
                                         )
@@ -214,12 +214,12 @@ fun DetailsScreen(
                                     val searching = imagesVM.onGetGifById(id)
                                     detailsVM.onDeleteFav(
                                         FavModel(
-                                            id_int = searching.first().id_int,
+                                            idInt = searching.first().idInt,
                                             url = url,
-                                            avatar_url = avatar,
-                                            display_name = displayName,
+                                            avatarUrl = avatar,
+                                            displayName = displayName,
                                             username = userName,
-                                            is_verified = verified,
+                                            isVerified = verified,
                                             id = id,
                                             type = typeResource
                                         )

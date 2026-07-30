@@ -44,7 +44,6 @@ class DetailsActivity : ComponentActivity() {
         mainVM.checkVersion()
 
         //Control de mail de contacto con developer
-
         //Cargamos el dato de firebase cuando arrancamos la aplicación
         mainVM.getMailDeveloper()
         //Observamos cualquier cambio del mail de contacto

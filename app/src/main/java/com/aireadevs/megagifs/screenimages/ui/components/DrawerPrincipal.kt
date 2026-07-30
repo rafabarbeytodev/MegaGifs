@@ -53,31 +53,31 @@ fun DrawerPrincipal(onCloseDrawer: () -> Unit, onShowDialog: (Boolean) -> Unit, 
                     .padding(4.dp)
             )
         }
-        Row(
-            modifier = Modifier
-                .padding(bottom = 8.dp, start = 8.dp, top = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.developer_contact),
-                contentDescription = "DeveloperContact",
-                tint = Color.Yellow
-            )
-            Text(
-                text = "Developer Contact",
-                modifier = Modifier
-                    .padding(vertical = 8.dp, horizontal = 8.dp)
-                    .clickable {
-                        onCloseDrawer()
-                        onShowDialog(true)
-                        typeDialog(DialogDeveloper.type)
-                    },
-                color = Color.White,
-                fontFamily = FontFamily.Serif,
-                fontStyle = FontStyle.Italic,
-                fontSize = 16.sp
-            )
-        }
+//        Row(
+//            modifier = Modifier
+//                .padding(bottom = 8.dp, start = 8.dp, top = 8.dp),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Icon(
+//                painter = painterResource(id = R.drawable.developer_contact),
+//                contentDescription = "DeveloperContact",
+//                tint = Color.Yellow
+//            )
+//            Text(
+//                text = "Developer Contact",
+//                modifier = Modifier
+//                    .padding(vertical = 8.dp, horizontal = 8.dp)
+//                    .clickable {
+//                        onCloseDrawer()
+//                        onShowDialog(true)
+//                        typeDialog(DialogDeveloper.type)
+//                    },
+//                color = Color.White,
+//                fontFamily = FontFamily.Serif,
+//                fontStyle = FontStyle.Italic,
+//                fontSize = 16.sp
+//            )
+//        }
         Row(
             modifier = Modifier
                 .padding(bottom = 8.dp, start = 8.dp, top = 8.dp),

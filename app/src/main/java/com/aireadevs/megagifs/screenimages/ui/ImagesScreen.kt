@@ -33,6 +33,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -49,7 +50,7 @@ import androidx.navigation.NavHostController
 import com.aireadevs.megagifs.core.Routes
 import com.aireadevs.megagifs.core.Types.*
 import com.aireadevs.megagifs.screenimages.ui.components.BottomNavigationPrincipal
-import com.aireadevs.megagifs.screenimages.ui.components.DeveloperContact
+//import com.aireadevs.megagifs.screenimages.ui.components.DeveloperContact
 import com.aireadevs.megagifs.screenimages.ui.components.DrawerPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.FabPrincipal
 import com.aireadevs.megagifs.screenimages.ui.components.ProgressBarPrincipal
@@ -93,13 +94,13 @@ fun ImagesScreen(
 
     val rvState = rememberLazyGridState()
 
-    val context = LocalContext.current
+    //val context = LocalContext.current
 
     var showDialog by rememberSaveable {
         mutableStateOf(false)
     }
     var typeDialog by rememberSaveable {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     var firstTime by rememberSaveable {
@@ -120,7 +121,7 @@ fun ImagesScreen(
     val showProgress by imagesVM.showProgress.observeAsState(initial = false)
     val typeImage by imagesVM.typeImage.observeAsState(initial = 0)
 
-    val mailDeveloper by mainVM.mailDeveloper.observeAsState(initial = "")
+    //val mailDeveloper by mainVM.mailDeveloper.observeAsState(initial = "")
 
     Column {
         Scaffold(
@@ -353,10 +354,10 @@ fun ImagesScreen(
                                                                 type = typeImage,
                                                                 url = url,
                                                                 search = search,
-                                                                avatar = item.avatar_url,
-                                                                displayName = item.display_name,
+                                                                avatar = item.avatarUrl,
+                                                                displayName = item.displayName,
                                                                 userName = item.username,
-                                                                verified = item.is_verified,
+                                                                verified = item.isVerified,
                                                                 id = item.id,
                                                                 stateFavorite = stateFavorite
                                                             )
@@ -387,11 +388,11 @@ fun ImagesScreen(
                     }
                 }
                 //Mostramos Dialog de desarrollador
-                if (showDialog && typeDialog == DialogDeveloper.type) DeveloperContact(
-                    onCloseAlert = { showDialog = false },
-                    onSendMessage = { message ->
-                        imagesVM.sendMail(context, message, mailDeveloper)
-                    })
+//                if (showDialog && typeDialog == DialogDeveloper.type) DeveloperContact(
+//                    onCloseAlert = { showDialog = false },
+//                    onSendMessage = { message ->
+//                        imagesVM.sendMail(context, message, mailDeveloper)
+//                    })
                 //Mostramos dialogo de Version
                 if (showDialog && typeDialog == DialogVersionInfo.type) VersionInfo(
                     onCloseAlert = { showDialog = false })

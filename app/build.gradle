@@ -13,7 +13,7 @@ plugins {
 
 android {
     namespace = "com.aireadevs.megagifs"
-    compileSdk = 36
+    compileSdk = 37
 
     bundle {
         language {
@@ -24,9 +24,9 @@ android {
     defaultConfig {
         applicationId = "com.aireadevs.megagifs"
         minSdk = 28
-        targetSdk = 36
-        versionCode = 14
-        versionName = "Piscis 1.14"
+        targetSdk = 37
+        versionCode = 16
+        versionName = "Piscis 1.16"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -43,9 +43,6 @@ android {
             proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            ndk {
-                debugSymbolLevel = "FULL"
-            }
         }
         release {
             shrinkResources = true
@@ -73,9 +70,7 @@ android {
         kotlinCompilerExtensionVersion = '1.5.1'
     }
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+        resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
     kotlin{
         compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
@@ -114,13 +109,13 @@ dependencies {
     implementation libs.androidx.compose.ui.graphics
     implementation libs.androidx.compose.ui.tooling.preview
     implementation libs.androidx.compose.ui.tooling
-    implementation libs.androidx.activity.compose.v193
-    implementation libs.compose
+    implementation libs.androidx.activity.compose
+    implementation libs.glide.compose
 
     implementation libs.androidx.lifecycle.viewmodel.compose
-    implementation libs.androidx.lifecycle.runtime.ktx.v287
+    implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.compose.runtime.livedata
-    implementation libs.androidx.navigation.compose.v285
+    implementation libs.androidx.navigation.compose
 
     implementation libs.accompanist.permissions
 
@@ -148,10 +143,8 @@ dependencies {
 
 
     testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit.v121
-    androidTestImplementation libs.androidx.espresso.core.v361
-    androidTestImplementation platform(libs.compose)
-    androidTestImplementation libs.androidx.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
     debugImplementation libs.ui.tooling
     debugImplementation libs.androidx.compose.ui.test.manifest
 }

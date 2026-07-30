@@ -12,12 +12,12 @@ import com.google.gson.annotations.SerializedName
  * All rights reserved 2023.
  *****/
 data class FavModel(
-    @SerializedName("id_int") val id_int: Long = 0,
+    @SerializedName("idInt") val idInt: Long = 0,
     @SerializedName("id") val id: String = "",
     @SerializedName("url") val url: String,
     @SerializedName("type") val type: Int,
-    @SerializedName("avatar_url") val avatar_url: String,
-    @SerializedName("display_name") val display_name: String,
+    @SerializedName("avatarUrl") val avatarUrl: String,
+    @SerializedName("displayName") val displayName: String,
     @SerializedName("username") val username: String,
-    @SerializedName("is_verified") val is_verified: Boolean,
+    @SerializedName("isVerified") val isVerified: Boolean,
 )

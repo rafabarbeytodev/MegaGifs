@@ -36,28 +36,28 @@ class GifsFavRepository @Inject constructor(
     suspend fun add(favModel: FavModel) {
         gifsFavDao.addFavGif(
             GifsFavEntity(
-                favModel.id_int,
+                favModel.idInt,
                 favModel.id,
                 favModel.url,
                 favModel.type,
-                favModel.avatar_url,
-                favModel.display_name,
+                favModel.avatarUrl,
+                favModel.displayName,
                 favModel.username,
-                favModel.is_verified
+                favModel.isVerified
             )
         )
     }
     suspend fun delete(favModel: FavModel) {
         gifsFavDao.deleteFavGif(
             GifsFavEntity(
-                favModel.id_int,
+                favModel.idInt,
                 favModel.id,
                 favModel.url,
                 favModel.type,
-                favModel.avatar_url,
-                favModel.display_name,
+                favModel.avatarUrl,
+                favModel.displayName,
                 favModel.username,
-                favModel.is_verified
+                favModel.isVerified
             )
         )
     }

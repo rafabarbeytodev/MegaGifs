@@ -141,6 +141,4 @@ class ImagesScreenViewModel @Inject constructor(
             )
         )
     }
-
-
 }
